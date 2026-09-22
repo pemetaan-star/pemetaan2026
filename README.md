@@ -19,6 +19,21 @@ Buka `http://localhost:3000`. Dashboard dimuat di dalam iframe sehingga
 `google.script.run`, GPS, upload file, dan alur autentikasi tetap ditangani
 oleh Web App Apps Script.
 
+## Offline Enumerator
+
+Form Enumerator menyimpan submission yang gagal dikirim, termasuk foto, di
+IndexedDB perangkat. Saat koneksi kembali atau user login lagi, antrean akan
+dikirim otomatis. Draft isian tetap menggunakan penyimpanan lokal yang sama
+seperti sebelumnya. Offline queue berlaku untuk pengiriman form, bukan untuk
+login atau pembacaan dashboard.
+
+## PWA
+
+Next.js menyediakan manifest dan service worker untuk instalasi ke layar utama.
+Karena dashboard Apps Script dimuat dari origin berbeda, service worker Next.js
+hanya meng-cache shell Next.js; data dan autentikasi tetap memerlukan Web App
+Apps Script serta koneksi ke KoboToolbox.
+
 ## Getting Started
 
 First, run the development server:

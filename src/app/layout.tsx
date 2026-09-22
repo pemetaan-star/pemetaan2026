@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Dashboard Pemetaan Hotspot Malang 2026",
   description: "Wrapper Next.js untuk Dashboard Pemetaan Hotspot Malang.",
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

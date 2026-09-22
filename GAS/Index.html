@@ -619,10 +619,13 @@
   let enumeratorGpsAccuracy = null;
   let enumeratorCorrectionId = null;
   let dataLoadRequestId = 0;
+  let offlineDbPromise = null;
+  let offlineQueueBusy = false;
 
   document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('error', event => reportRuntimeError(event.error || event.message));
     window.addEventListener('unhandledrejection', event => reportRuntimeError(event.reason));
+    window.addEventListener('online', processOfflineQueue);
     document.getElementById('loginPassword').addEventListener('keydown', event => {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -661,6 +664,7 @@
     } else {
       showLogin();
     }
+    updateOfflineQueueStatus();
   });
 
   // Skrip berada di akhir body, sehingga elemen tombol sudah tersedia di sini.
@@ -758,6 +762,7 @@
     document.getElementById('dataTableCaption').textContent = isEnumerator ? 'Pantau status validasi dan catatan tindak lanjut data yang Anda kirim.' : 'Pilih data untuk melakukan validasi analis';
     initMap();
     loadData();
+    processOfflineQueue();
   }
 
   function openEnumeratorForm() {
@@ -1363,6 +1368,79 @@
     }, maxSearchTime);
   }
 
+  function openOfflineDb() {
+    if (offlineDbPromise) return offlineDbPromise;
+    offlineDbPromise = new Promise((resolve, reject) => {
+      const request = indexedDB.open('hotspot-pendataan', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('submissions', { keyPath: 'id' });
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    return offlineDbPromise;
+  }
+
+  async function queueEnumeratorSubmission(formData) {
+    const db = await openOfflineDb();
+    await new Promise((resolve, reject) => {
+      const transaction = db.transaction('submissions', 'readwrite');
+      transaction.objectStore('submissions').put({ id: crypto.randomUUID(), formData: formData, createdAt: new Date().toISOString() });
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error);
+    });
+    updateOfflineQueueStatus();
+  }
+
+  async function getQueuedSubmissions() {
+    const db = await openOfflineDb();
+    return new Promise((resolve, reject) => {
+      const request = db.transaction('submissions', 'readonly').objectStore('submissions').getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function removeQueuedSubmission(id) {
+    const db = await openOfflineDb();
+    await new Promise((resolve, reject) => {
+      const transaction = db.transaction('submissions', 'readwrite');
+      transaction.objectStore('submissions').delete(id);
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error);
+    });
+  }
+
+  async function updateOfflineQueueStatus() {
+    try {
+      const count = (await getQueuedSubmissions()).length;
+      const status = document.getElementById('offlineQueueStatus');
+      if (!status) return;
+      status.textContent = count ? count + ' menunggu kirim' : '';
+      status.hidden = count === 0;
+    } catch (error) {
+      console.warn('Antrean offline tidak tersedia:', error);
+    }
+  }
+
+  function sendEnumeratorPayload(formData, onSuccess, onFailure) {
+    google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).submitEnumeratorForm(sessionToken, formData);
+  }
+
+  async function processOfflineQueue() {
+    if (offlineQueueBusy || !navigator.onLine || !sessionToken || !window.google || !google.script || !google.script.run) return;
+    offlineQueueBusy = true;
+    try {
+      const queued = await getQueuedSubmissions();
+      for (const item of queued) {
+        const result = await new Promise(resolve => sendEnumeratorPayload(item.formData, resolve, () => resolve(null)));
+        if (!result || !result.success) break;
+        await removeQueuedSubmission(item.id);
+      }
+    } finally {
+      offlineQueueBusy = false;
+      updateOfflineQueueStatus();
+    }
+  }
+
   function submitEnumeratorForm(event) {
     event.preventDefault();
     const form = document.getElementById('enumeratorForm');
@@ -1378,7 +1456,7 @@
     const button = document.getElementById('btnSubmitEnumerator');
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
-    reader.onload = () => {
+    reader.onload = async () => {
       const formData = {
         organisasi_pelaksana: document.getElementById('enum_organisasi_pelaksana').value,
         nama_hotspot: document.getElementById('enum_nama_hotspot').value,
@@ -1386,34 +1464,34 @@
         kelurahan: document.getElementById('enum_kelurahan').value,
         alamat_lengkap: document.getElementById('enum_alamat_lengkap').value,
         titik_koordinat: document.getElementById('enum_titik_koordinat').value,
-        foto_lokasi: photo.name,
-        fotoData: reader.result.split(',')[1], fotoName: photo.name, fotoMime: photo.type,
+        foto_lokasi: photo.name, fotoData: reader.result.split(',')[1], fotoName: photo.name, fotoMime: photo.type,
         status_hotspot: document.getElementById('enum_status_hotspot').value,
-        populasi_kunci: populasi.join(' '),
-        tipe_lokasi: document.getElementById('enum_tipe_lokasi').value,
-        sub_tipe_lokasi: document.getElementById('enum_sub_tipe_lokasi').value,
-        tipe_lokasi_lainnya: document.getElementById('enum_tipe_lokasi_lainnya').value,
-        waktu_aktivitas: waktu.join(' '),
-        estimasi_jumlah_populasi: document.getElementById('enum_estimasi_jumlah_populasi').value,
-        jumlah_diedukasi: document.getElementById('enum_jumlah_diedukasi').value,
-        jumlah_tes_hiv: document.getElementById('enum_jumlah_tes_hiv').value,
+        populasi_kunci: populasi.join(' '), tipe_lokasi: document.getElementById('enum_tipe_lokasi').value,
+        sub_tipe_lokasi: document.getElementById('enum_sub_tipe_lokasi').value, tipe_lokasi_lainnya: document.getElementById('enum_tipe_lokasi_lainnya').value,
+        waktu_aktivitas: waktu.join(' '), estimasi_jumlah_populasi: document.getElementById('enum_estimasi_jumlah_populasi').value,
+        jumlah_diedukasi: document.getElementById('enum_jumlah_diedukasi').value, jumlah_tes_hiv: document.getElementById('enum_jumlah_tes_hiv').value,
         jumlah_hiv_positif: document.getElementById('enum_jumlah_hiv_positif').value,
         catatan_lapangan: (enumeratorCorrectionId ? '[Perbaikan dari ID ' + enumeratorCorrectionId + '] ' : '') + document.getElementById('enum_catatan_lapangan').value,
-        sumber_informasi: document.getElementById('enum_sumber_informasi').value,
-        no_hp_informan: document.getElementById('enum_no_hp_informan').value,
-        keterangan_aktivitas: document.getElementById('enum_keterangan_aktivitas').value,
-        kondisi_saat_pemetaan: document.getElementById('enum_kondisi_saat_pemetaan').value
+        sumber_informasi: document.getElementById('enum_sumber_informasi').value, no_hp_informan: document.getElementById('enum_no_hp_informan').value,
+        keterangan_aktivitas: document.getElementById('enum_keterangan_aktivitas').value, kondisi_saat_pemetaan: document.getElementById('enum_kondisi_saat_pemetaan').value
       };
-      google.script.run.withSuccessHandler(result => {
-        showNotice(result && result.success ? 'Data berhasil disimpan' : 'Data belum tersimpan', result ? result.message : 'Data selesai diproses.', result && result.success ? 'success' : 'warning');
-        button.disabled = false;
-        button.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan';
+      const finish = () => { button.disabled = false; button.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan'; };
+      if (!navigator.onLine) {
+        await queueEnumeratorSubmission(formData);
+        finish();
+        showNotice('Data masuk antrean', 'Koneksi internet tidak tersedia. Data dan foto tersimpan di perangkat dan akan dikirim saat online.', 'warning');
+        return;
+      }
+      sendEnumeratorPayload(formData, async result => {
+        finish();
         if (result && result.success) { localStorage.removeItem(getEnumeratorDraftKey()); enumeratorModalObj.hide(); loadData(); }
-      }).withFailureHandler(error => {
-        handleSessionError(error);
-        button.disabled = false;
-        button.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan';
-      }).submitEnumeratorForm(sessionToken, formData);
+        showNotice(result && result.success ? 'Data berhasil disimpan' : 'Data belum tersimpan', result ? result.message : 'Data selesai diproses.', result && result.success ? 'success' : 'warning');
+      }, async error => {
+        await queueEnumeratorSubmission(formData);
+        finish();
+        showNotice('Data masuk antrean', 'Server belum dapat dihubungi. Data dan foto tersimpan dan akan dicoba lagi saat koneksi pulih.', 'warning');
+        console.warn('Submission diantrekan:', error);
+      });
     };
     reader.readAsDataURL(photo);
   }

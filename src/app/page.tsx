@@ -1,6 +1,16 @@
+"use client";
+
+import { useEffect } from "react";
+
 const gasWebAppUrl = process.env.NEXT_PUBLIC_GAS_WEB_APP_URL;
 
 export default function Home() {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+    }
+  }, []);
+
   return (
     <main className="shell">
       {gasWebAppUrl ? (

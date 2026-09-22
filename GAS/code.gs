@@ -435,7 +435,13 @@ function saveSupervision(sessionToken, supervisionData) {
     status_final: statusFinal,
   };
   const finalHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0].map(value => String(value).trim());
-  sheet.appendRow(finalHeaders.map(header => supervisionValues[header] === undefined ? '' : supervisionValues[header]));
+  const supervisionLock = LockService.getScriptLock();
+  if (!supervisionLock.tryLock(30000)) return { success: false, message: 'Spreadsheet sedang dipakai request lain. Coba simpan kembali.' };
+  try {
+    sheet.appendRow(finalHeaders.map(header => supervisionValues[header] === undefined ? '' : supervisionValues[header]));
+  } finally {
+    supervisionLock.releaseLock();
+  }
   return { success: true, message: 'Form supervisi berhasil disimpan.' };
 }
 
@@ -792,8 +798,14 @@ function syncKoboToSheet() {
       }));
     });
 
-    sheet.clearContents();
-    sheet.getRange(1, 1, matrix.length, headers.length).setValues(matrix);
+    const syncLock = LockService.getScriptLock();
+    if (!syncLock.tryLock(30000)) return 'Sinkronisasi ditunda karena Spreadsheet sedang dipakai proses lain.';
+    try {
+      sheet.clearContents();
+      sheet.getRange(1, 1, matrix.length, headers.length).setValues(matrix);
+    } finally {
+      syncLock.releaseLock();
+    }
     const cleaningResult = syncValidDataToCleaning();
     return `Berhasil sync ${data.length} data. ${cleaningResult.message}`;
   } catch (e) {

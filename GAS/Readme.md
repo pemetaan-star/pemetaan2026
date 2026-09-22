@@ -9,7 +9,7 @@ SPREADSHEET_ID = (isi di Script Properties)
 KOBO_SUBMISSION_URL = https://kc.kobotoolbox.org/submission
 USER_SHEET_NAME = User
 KOBO_FORM_URL = https://kf.kobotoolbox.org/#/forms/aWvysPCGaAqQkRSzvyz7PU/summary
-KOBO_FORM_ID = form_pemetaan_hotspot_malang_2026
+KOBO_FORM_ID = aWvysPCGaAqQkRSzvyz7PU
 
 
 

@@ -1,0 +1,10 @@
+{
+  "name": "Pemetaan Hotspot Malang 2026",
+  "short_name": "Hotspot Malang",
+  "description": "Dashboard pendataan dan quality control hotspot Kota Malang.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f8fb",
+  "theme_color": "#14253d",
+  "lang": "id"
+}
