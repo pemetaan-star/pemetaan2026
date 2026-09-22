@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Lingga Indonesia">
+  <rect width="512" height="512" fill="#fff"/>
+  <g fill="none" stroke="#1717d9" stroke-width="25" stroke-linecap="butt">
+    <path d="M205 28A220 220 0 0 0 31 220"/>
+    <path d="M307 27A220 220 0 0 1 481 220"/>
+    <path d="M481 292A220 220 0 0 1 307 485"/>
+    <path d="M205 485A220 220 0 0 1 31 292"/>
+  </g>
+  <g fill="#1717d9">
+    <path d="M205 0l98 6-43 67z"/>
+    <path d="M512 205l-6 98-67-43z"/>
+    <path d="M307 512l-98-6 43-67z"/>
+    <path d="M0 307l6-98 67 43z"/>
+  </g>
+  <g fill="#1717d9" font-family="Arial, Helvetica, sans-serif" font-style="italic" font-weight="700">
+    <text x="104" y="220" font-size="108">Lingga</text>
+    <text x="181" y="326" font-size="108">Indonesia</text>
+  </g>
+</svg>
