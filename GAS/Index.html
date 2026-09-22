@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard QC Hotspot Malang 2026</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+    :root {
+      --ink: #172235;
+      --muted: #718096;
+      --navy: #14253d;
+      --navy-soft: #203854;
+      --teal: #0f9f94;
+      --teal-soft: #e3f6f3;
+      --coral: #ec765d;
+      --paper: #f5f8fb;
+      --line: #e4ebf2;
+      --shadow: 0 14px 35px rgba(25, 49, 79, 0.08);
+    }
+
+    * { letter-spacing: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0 0 auto;
+      height: 320px;
+      background: linear-gradient(135deg, #e9f5f3 0%, #f5f8fb 62%, #fff4ed 100%);
+      z-index: -1;
+    }
+    h1, h2, h3, h4, h5, h6, .navbar-brand { font-family: 'Space Grotesk', sans-serif; }
+    .app-shell { max-width: 1600px; margin: 0 auto; }
+    .navbar {
+      background: var(--navy) !important;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      min-height: 76px;
+    }
+    .navbar-brand { font-size: 1.05rem; letter-spacing: -.02em; }
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-right: 10px;
+      border-radius: 10px;
+      background: var(--coral);
+      color: white;
+      box-shadow: 0 5px 14px rgba(236, 118, 93, .3);
+    }
+    .eyebrow { color: var(--teal); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .page-title { color: var(--ink); font-size: clamp(1.65rem, 2vw, 2.3rem); font-weight: 700; letter-spacing: -.04em; }
+    .page-subtitle { color: var(--muted); font-size: .95rem; }
+    .card, .panel { border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+    .card-kpi { border-left: 0; overflow: hidden; position: relative; }
+    .card-kpi::after { content: ''; position: absolute; right: -28px; top: -35px; width: 105px; height: 105px; border-radius: 50%; background: rgba(15,159,148,.07); }
+    .card-kpi .kpi-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 11px; font-size: 1.05rem; }
+    .card-kpi .kpi-label { color: var(--muted); font-size: .7rem; font-weight: 700; letter-spacing: .08em; }
+    .card-kpi h2 { font-size: 2rem; letter-spacing: -.05em; }
+    .kpi-primary .kpi-icon { background: #e5efff; color: #2463ce; }
+    .kpi-success .kpi-icon { background: var(--teal-soft); color: var(--teal); }
+    .kpi-warning .kpi-icon { background: #fff2d7; color: #b87800; }
+    .kpi-danger .kpi-icon { background: #ffebe7; color: #cf5c48; }
+    .section-heading { color: var(--ink); font-size: .98rem; }
+    .section-caption { color: var(--muted); font-size: .8rem; }
+    .panel-header { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    #map { height: 420px; width: 100%; border-radius: 12px; z-index: 1; }
+    .chart-wrap { height: 360px; position: relative; }
+    .table-responsive { max-height: 550px; overflow-y: auto; }
+    .table { --bs-table-hover-bg: #f5faf9; margin-bottom: 0; }
+    .table thead th { position: sticky; top: 0; background: var(--navy) !important; border-color: var(--navy-soft); color: white !important; font-size: .7rem; letter-spacing: .07em; text-transform: uppercase; z-index: 10; }
+    .table tbody td { border-color: var(--line); font-size: .87rem; }
+    .risk-metric { height: 100%; padding: .8rem .9rem; border: 1px solid var(--line); border-radius: 10px; background: #fbfcfe; }
+    .risk-metric small { display: block; color: var(--muted); font-size: .65rem; font-weight: 700; letter-spacing: .05em; }
+    .risk-metric strong { display: block; margin-top: .25rem; color: var(--ink); font-size: 1.45rem; }
+    .enumerator-mode #kpiQcCard,
+    .enumerator-mode #riskPanel,
+    .enumerator-mode .admin-column { display: none !important; }
+    .admin-column { display: none; }
+    .admin-mode .admin-column { display: table-cell !important; }
+    .badge-status { border-radius: 7px; font-size: .73rem; font-weight: 700; padding: .55em .75em; }
+    .form-control, .form-select { border-color: var(--line); border-radius: 9px; }
+    .form-control:focus, .form-select:focus { border-color: var(--teal); box-shadow: 0 0 0 .2rem rgba(15,159,148,.12); }
+    .btn { border-radius: 9px; font-weight: 600; }
+    .btn-primary { background: var(--teal); border-color: var(--teal); }
+    .btn-primary:hover, .btn-primary:focus { background: #0b887f; border-color: #0b887f; }
+    .btn-outline-light { border-color: rgba(255,255,255,.3); }
+    .modal-content { border: 0; border-radius: 16px; box-shadow: 0 24px 70px rgba(13, 30, 51, .2); overflow: hidden; }
+    .modal-header { background: var(--navy) !important; }
+    .modal-backdrop.show {
+      backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, 0.28);
+    }
+    .floating-notice {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      background: rgba(15, 23, 42, 0.2);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .18s ease, visibility .18s ease;
+    }
+    .floating-notice.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .floating-notice-card {
+      width: min(420px, 100%);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.97);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 28px 90px rgba(13, 30, 51, .22);
+      overflow: hidden;
+      transform: translateY(10px) scale(.98);
+      transition: transform .18s ease;
+      animation: noticeIn .22s ease forwards;
+    }
+    .floating-notice.show .floating-notice-card {
+      transform: translateY(0) scale(1);
+    }
+    .floating-notice-body {
+      padding: 2rem 2rem 1.25rem;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.96) 100%);
+    }
+    .notice-icon {
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1rem;
+      border-radius: 18px;
+      font-size: 1.7rem;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 10px 24px rgba(16, 24, 40, .08);
+    }
+    .notice-icon.notice-info { color: #2463ce; background: linear-gradient(135deg, #edf4ff 0%, #dfeeff 100%); }
+    .notice-icon.notice-success { color: var(--teal); background: linear-gradient(135deg, #e9fbf7 0%, #d9f8f1 100%); }
+    .notice-icon.notice-warning { color: #b87800; background: linear-gradient(135deg, #fff7e2 0%, #ffecc3 100%); }
+    .notice-icon.notice-danger { color: #cf5c48; background: linear-gradient(135deg, #fff0ec 0%, #feded8 100%); }
+    .notice-title {
+      color: var(--ink);
+      font-size: 1.2rem;
+      letter-spacing: -.02em;
+    }
+    .notice-message {
+      color: var(--muted);
+      line-height: 1.6;
+      white-space: pre-line;
+      font-size: .9rem;
+    }
+    .floating-notice-footer {
+      display: flex;
+      justify-content: center;
+      padding: 0 2rem 1.75rem;
+      background: transparent;
+    }
+    .floating-notice-footer .btn {
+      min-width: 132px;
+      border-radius: 12px;
+      padding: .7rem 1.15rem;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(15, 159, 148, 0.18);
+    }
+    @keyframes noticeIn {
+      from { opacity: 0; transform: translateY(12px) scale(.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #modalEnumerator .modal-content { max-height: calc(100vh - 2rem); }
+    #modalEnumerator .modal-body { max-height: calc(100vh - 10rem); overflow-y: auto; overscroll-behavior: contain; }
+    #modalEnumerator .modal-dialog { margin: 1rem auto; }
+    #modalEnumerator .form-label { font-size: .8rem; color: var(--ink); }
+    #modalEnumerator #enum_titik_koordinat[readonly] { background: #f1f5f9; cursor: not-allowed; }
+    #modalEnumerator .gps-help { color: var(--muted); font-size: .75rem; margin-top: .4rem; }
+    #modalEnumerator .form-check-input { width: 1.05rem; height: 1.05rem; margin-top: .1rem; }
+    #modalEnumerator .modal-footer { gap: .5rem; }
+    #modalSupervision .modal-content { max-height: calc(100vh - 2rem); }
+    #modalSupervision .modal-body { max-height: calc(100vh - 10rem); overflow-y: auto; overscroll-behavior: contain; }
+    #modalSupervision .modal-dialog { margin: 1rem auto; }
+    [hidden] { display: none !important; }
+    .login-view { min-height: 100vh; display: grid; place-items: center; padding: 24px; position: relative; overflow: hidden; }
+    .login-view::before, .login-view::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
+    .login-view::before { width: 420px; height: 420px; top: -180px; right: -120px; background: rgba(15,159,148,.12); }
+    .login-view::after { width: 300px; height: 300px; bottom: -140px; left: -90px; background: rgba(236,118,93,.1); }
+    .login-layout { width: min(980px, 100%); display: grid; grid-template-columns: 1.05fr .95fr; background: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.9); border-radius: 24px; box-shadow: 0 24px 70px rgba(25,49,79,.13); overflow: hidden; position: relative; z-index: 1; }
+    .login-intro { background: var(--navy); color: white; padding: 52px; position: relative; overflow: hidden; }
+    .login-intro::after { content: ''; position: absolute; width: 210px; height: 210px; right: -75px; bottom: -85px; border: 30px solid rgba(15,159,148,.35); border-radius: 50%; }
+    .login-intro h1 { font-size: clamp(2rem, 4vw, 3.1rem); letter-spacing: -.06em; line-height: 1.04; max-width: 380px; }
+    .login-intro p { color: rgba(255,255,255,.68); max-width: 350px; line-height: 1.7; }
+    .login-feature { display: flex; gap: 12px; align-items: center; color: rgba(255,255,255,.8); font-size: .82rem; }
+    .login-feature i { color: #71ddd3; font-size: 1.1rem; }
+    .login-form { background: white; padding: 52px; }
+    .login-form h2 { color: var(--ink); font-size: 1.55rem; letter-spacing: -.04em; }
+    .login-form .form-label { color: var(--ink); font-size: .8rem; font-weight: 700; }
+    .login-form .input-group-text { background: #f7fafc; border-color: var(--line); color: var(--muted); }
+    .login-form .form-control { min-height: 46px; }
+    .login-error { color: #bd4b3c; background: #fff0ed; border: 1px solid #ffd9d2; border-radius: 9px; font-size: .82rem; padding: 10px 12px; }
+    .user-chip { color: rgba(255,255,255,.82); font-size: .78rem; margin-right: 14px; }
+    .user-chip strong { color: white; }
+    @media (max-width: 767px) {
+      .navbar { min-height: 66px; }
+      .navbar-brand { font-size: .88rem; max-width: 72%; }
+      .container-fluid.px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+      #map { height: 310px; }
+      .table-responsive { max-height: 470px; }
+      #searchInput { width: 100% !important; margin-top: 12px; }
+      .table-toolbar { align-items: stretch !important; flex-direction: column; }
+    }
+    @media (max-width: 760px) {
+      .login-layout { grid-template-columns: 1fr; }
+      .login-intro { padding: 34px; }
+      .login-intro p { margin-bottom: 18px !important; }
+      .login-feature { display: none; }
+      .login-form { padding: 34px; }
+      .user-chip { display: none; }
+      #modalEnumerator .modal-content { max-height: calc(100vh - 1rem); }
+      #modalEnumerator .modal-dialog { margin: .5rem; }
+      #modalEnumerator .modal-body { max-height: calc(100vh - 8rem); padding: 1rem !important; }
+      #modalEnumerator .modal-header { padding: .85rem 1rem; }
+      #modalEnumerator .modal-header .modal-title { font-size: 1rem; }
+      #modalEnumerator .modal-footer { padding: .75rem 1rem; flex-direction: column-reverse; align-items: stretch; }
+      #modalEnumerator .modal-footer .btn { width: 100%; min-height: 44px; }
+      #modalEnumerator .input-group { flex-direction: column; gap: .5rem; }
+      #modalEnumerator .input-group .form-control,
+      #modalEnumerator .input-group .btn { width: 100%; border-radius: 9px; min-height: 44px; }
+      #modalEnumerator #enum_titik_koordinat_group { display: block; }
+      #modalEnumerator #enum_titik_koordinat_group .form-control,
+      #modalEnumerator #enum_titik_koordinat_group .btn { width: 100%; }
+      #modalEnumerator .modal-body .col-md-7,
+      #modalEnumerator .modal-body .col-md-5 { width: 100%; }
+      #modalEnumerator .gps-help { font-size: .72rem; }
+      #modalEnumerator .row { --bs-gutter-x: .75rem; --bs-gutter-y: .75rem; }
+      #modalEnumerator .eyebrow { margin-top: .35rem; }
+      #modalEnumerator .alert { margin-bottom: 1rem; }
+      #modalSupervision .modal-content { max-height: calc(100vh - 1rem); }
+      #modalSupervision .modal-dialog { margin: .5rem; }
+      #modalSupervision .modal-body { max-height: calc(100vh - 8rem); padding: 1rem !important; }
+      #modalSupervision .modal-footer { padding: .75rem 1rem; flex-direction: column-reverse; align-items: stretch; }
+      #modalSupervision .modal-footer .btn { width: 100%; min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+<main id="loginView" class="login-view">
+  <div class="login-layout">
+    <section class="login-intro">
+      <div class="brand-mark mb-4"><i class="bi bi-geo-alt-fill"></i></div>
+      <div class="eyebrow text-info mb-3">Data Intelligence Platform</div>
+      <h1 class="mb-3">Pemetaan Hotspot Malang</h1>
+      <p class="mb-5">Kelola data lapangan, pantau persebaran, dan pastikan setiap pendataan melewati proses quality control yang terukur.</p>
+      <div class="d-grid gap-3">
+        <div class="login-feature"><i class="bi bi-check2-circle"></i><span>Dashboard monitoring terpusat</span></div>
+        <div class="login-feature"><i class="bi bi-check2-circle"></i><span>Validasi QC berbasis data</span></div>
+        <div class="login-feature"><i class="bi bi-check2-circle"></i><span>Sinkronisasi dengan KoboToolbox</span></div>
+      </div>
+    </section>
+    <section class="login-form">
+      <div class="eyebrow mb-2">Secure access</div>
+      <h2 class="mb-2">Masuk ke dashboard</h2>
+      <p class="text-muted small mb-4">Gunakan akun yang terdaftar pada sheet User.</p>
+      <form id="loginForm" onsubmit="return false;">
+        <div class="mb-3">
+          <label class="form-label" for="loginUsername">Username</label>
+          <div class="input-group"><span class="input-group-text"><i class="bi bi-person"></i></span><input type="text" id="loginUsername" class="form-control" autocomplete="username" required></div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="loginPassword">Sandi</label>
+          <div class="input-group"><span class="input-group-text"><i class="bi bi-lock"></i></span><input type="password" id="loginPassword" class="form-control" autocomplete="current-password" required></div>
+        </div>
+        <div id="loginError" class="login-error mb-3" hidden></div>
+        <button type="button" class="btn btn-primary w-100 py-2" id="loginButton"><i class="bi bi-box-arrow-in-right me-2"></i>Masuk</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<div id="appView" hidden>
+
+<nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
+  <div class="container-fluid px-4">
+    <span class="navbar-brand fw-bold"><span class="brand-mark"><i class="bi bi-geo-alt-fill"></i></span>Pemetaan Hotspot Populasi Kunci Kota Malang 2026</span>
+    <div class="d-flex align-items-center"><span class="user-chip"><i class="bi bi-person-circle me-1"></i><strong id="userDisplay">-</strong> <span id="roleDisplay"></span></span><button id="enumeratorInputButton" class="btn btn-primary btn-sm me-2" onclick="openEnumeratorForm()" hidden><i class="bi bi-file-earmark-plus me-1"></i>Input Form</button><button id="supervisionFormButton" class="btn btn-warning btn-sm me-2" onclick="openSupervisionForm()" hidden><i class="bi bi-clipboard-check me-1"></i>Form Supervisi</button><button id="supervisionHistoryButton" class="btn btn-outline-light btn-sm me-2" onclick="openSupervisionList()" hidden><i class="bi bi-list-check me-1"></i>Riwayat Supervisi</button><button class="btn btn-outline-light btn-sm me-2" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Refresh Data</button><button class="btn btn-outline-light btn-sm" onclick="logout()" title="Keluar"><i class="bi bi-box-arrow-right"></i></button></div>
+  </div>
+</nav>
+
+<div class="container-fluid px-4 app-shell">
+  <div class="mb-4 pt-2">
+    <div class="eyebrow mb-2" id="dashboardEyebrow">Monitoring & Quality Control</div>
+    <h1 class="page-title mb-1" id="dashboardTitle">Dashboard Pendataan Hotspot</h1>
+    <p class="page-subtitle mb-0" id="dashboardSubtitle">Ringkasan data survei lapangan dan status validasi kualitas secara real-time.</p>
+  </div>
+
+  <!-- Baris KPI -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3" id="kpiQcCard">
+      <div class="card card-kpi kpi-primary shadow-sm p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-start"><span class="kpi-icon"><i class="bi bi-grid-1x2-fill"></i></span><i class="bi bi-arrow-up-right text-muted"></i></div>
+        <small class="kpi-label d-block mt-3">TOTAL HOTSPOT TERCATAT</small>
+        <h2 class="mb-0 fw-bold text-primary" id="kpi-total">0</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-kpi kpi-success shadow-sm p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-start"><span class="kpi-icon"><i class="bi bi-broadcast-pin"></i></span><i class="bi bi-activity text-muted"></i></div>
+        <small class="kpi-label d-block mt-3">HOTSPOT BARU & AKTIF</small>
+        <h2 class="mb-0 fw-bold text-success" id="kpi-aktif">0</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-kpi kpi-warning shadow-sm p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-start"><span class="kpi-icon"><i class="bi bi-shield-exclamation"></i></span><i class="bi bi-hourglass-split text-muted"></i></div>
+        <small class="kpi-label d-block mt-3">PERLU VALIDASI QC (PENDING)</small>
+        <h2 class="mb-0 fw-bold text-warning" id="kpi-qc">0</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-kpi kpi-danger shadow-sm p-3 bg-white h-100">
+        <div class="d-flex justify-content-between align-items-start"><span class="kpi-icon"><i class="bi bi-heart-pulse-fill"></i></span><i class="bi bi-bar-chart-line text-muted"></i></div>
+        <small class="kpi-label d-block mt-3">HIV+ / JUMLAH TES</small>
+        <h2 class="mb-0 fw-bold text-danger" id="kpi-hiv">0 <small class="fs-5 text-muted" id="kpi-tes">/ 0 Tes</small></h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-8"><div class="card shadow-sm p-3 bg-white h-100"><div class="panel-header d-flex justify-content-between align-items-center mb-3"><div><h6 class="section-heading fw-bold mb-1"><i class="bi bi-map me-2 text-success"></i>Peta Persebaran Hotspot</h6><span class="section-caption">Lokasi titik pendataan di wilayah Kota Malang</span></div><span class="badge rounded-pill text-bg-light">GIS</span></div><div id="map"></div></div></div>
+    <div class="col-md-4"><div class="card shadow-sm p-3 bg-white h-100"><div class="panel-header mb-3"><h6 class="section-heading fw-bold mb-1"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Distribusi Kecamatan</h6><span class="section-caption">Komposisi hotspot berdasarkan wilayah</span></div><div class="chart-wrap d-flex justify-content-center align-items-center"><canvas id="chartKecamatan"></canvas></div></div></div>
+  </div>
+
+  <div class="card shadow-sm p-3 bg-white mb-4" id="riskPanel">
+    <div class="panel-header d-flex justify-content-between align-items-center mb-3">
+      <div><h6 class="section-heading fw-bold mb-1"><i class="bi bi-shield-exclamation me-2 text-warning"></i>Risiko Otomatis</h6><span class="section-caption">Deteksi data baru, tidak aktif, duplikat, tidak lengkap, dan terlambat</span></div>
+      <span class="badge rounded-pill text-bg-light" id="riskDeadlineLabel">Batas 3 hari</span>
+    </div>
+    <div class="row g-3 mb-3">
+      <div class="col-md-2 col-6"><div class="risk-metric"><small>HOTSPOT BARU</small><strong id="risk-new">-</strong></div></div>
+      <div class="col-md-2 col-6"><div class="risk-metric"><small>TIDAK AKTIF</small><strong id="risk-inactive">-</strong></div></div>
+      <div class="col-md-2 col-6"><div class="risk-metric"><small>DUPLIKASI</small><strong id="risk-duplicate">-</strong></div></div>
+      <div class="col-md-2 col-6"><div class="risk-metric"><small>TIDAK LENGKAP</small><strong id="risk-incomplete">-</strong></div></div>
+      <div class="col-md-2 col-6"><div class="risk-metric"><small>TERLAMBAT</small><strong id="risk-late">-</strong></div></div>
+    </div>
+    <div class="table-responsive" id="riskTableWrap" hidden>
+      <table class="table table-sm table-bordered align-middle mb-0" id="riskTable">
+        <thead class="table-light"><tr><th>ID Data</th><th>Nama Hotspot</th><th>Risiko</th><th>Detail</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card shadow-sm p-3 bg-white mb-5">
+    <div class="table-toolbar d-flex justify-content-between align-items-center mb-3">
+      <div><h6 class="section-heading fw-bold mb-1" id="dataTableTitle"><i class="bi bi-table me-2 text-success"></i>Data Survei & Quality Control</h6><span class="section-caption" id="dataTableCaption">Pilih data untuk melakukan validasi analis</span></div>
+      <input type="text" id="searchInput" class="form-control form-control-sm" style="width: 300px;" placeholder="🔍 Cari nama / kelurahan..." onkeyup="filterTable()">
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle" id="dataTable">
+        <thead class="text-center">
+          <tr><th>ID Data</th><th>Tanggal</th><th>Nama Hotspot</th><th>Wilayah (Kec/Kel)</th><th>Populasi Kunci</th><th>Status Fisik</th><th class="qc-column">Status Validasi QC</th><th class="qc-feedback-column">Catatan / Tindak Lanjut</th><th class="qc-action-column">Aksi / Perbaikan</th><th class="admin-column">Aksi Admin</th></tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="10" class="text-center py-5 text-muted"><div class="spinner-border text-primary spinner-border-sm me-2"></div>Memuat data dari server...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="modal fade" id="modalSupervisionList" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white"><h5 class="modal-title fw-bold"><i class="bi bi-list-check me-2"></i>Daftar Supervisi</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4">
+        <div class="eyebrow mb-2">Supervisi yang sudah dibuat</div>
+        <div class="table-responsive"><table class="table table-bordered table-hover align-middle" id="supervisionHistoryTable"><thead class="table-light"><tr><th>ID</th><th>Enumerator</th><th>Organisasi</th><th>Jumlah Hotspot</th><th>Supervisor</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody><tr><td colspan="7" class="text-center text-muted">Memuat data...</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDataDetail" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white"><h5 class="modal-title fw-bold"><i class="bi bi-file-text me-2"></i>Detail Data Pemetaan</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4" id="dataDetailBody"></div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSupervisionDetail" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white"><h5 class="modal-title fw-bold"><i class="bi bi-file-text me-2"></i>Detail Supervisi</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body p-4" id="supervisionDetailBody"></div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button><button type="button" class="btn btn-primary" id="btnPrintSupervisionDetail"><i class="bi bi-printer me-2"></i>Cetak PDF</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSupervision" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white"><h5 class="modal-title fw-bold"><i class="bi bi-clipboard-check me-2"></i>Format Supervisi Lapangan Pemetaan Hotspot Populasi Kunci Kota Malang Tahun 2026</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <form id="supervisionForm">
+        <div class="modal-body p-4">
+          <div class="eyebrow mb-2">A. Identitas Supervisi</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-bold">Tanggal supervisi *</label><input id="sup_tanggal_supervisi" type="date" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Lokasi/wilayah supervisi *</label><input id="sup_lokasi_wilayah" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Nama supervisor *</label><input id="sup_nama_supervisor" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Nama enumerator (yang disupervisi) *</label><select id="sup_nama_enumerator" class="form-select" required><option value="">Pilih enumerator</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Komunitas/Organisasi *</label><select id="sup_komunitas_organisasi" class="form-select" required><option value="">Pilih organisasi</option><option value="lgi">Yayasan Lingkar Gagasan Indonesia (LGI)</option><option value="igama">Yayasan IGAMA</option><option value="wamarapa">Wamarapa</option><option value="fatayat_nu">SSR Fatayat NU Jawa Timur (PENASUN)</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Jumlah hotspot yang dipantau</label><input id="sup_jumlah_hotspot" type="number" min="0" class="form-control" value="0" readonly required></div>
+          </div>
+
+          <div class="eyebrow mb-2">B. Pemeriksaan Pelaksanaan Lapangan</div>
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle">
+              <thead class="table-light text-center">
+                <tr><th style="width: 60px;">No</th><th>Komponen Pemeriksaan</th><th style="width: 110px;">Ya</th><th style="width: 110px;">Tidak</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Enumerator memahami tujuan dan metode pemetaan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_1" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_1" value="tidak"></td></tr>
+                <tr><td>2</td><td>Enumerator menggunakan instrumen pemetaan yang telah ditetapkan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_2" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_2" value="tidak"></td></tr>
+                <tr><td>3</td><td>Enumerator melakukan pengumpulan data sesuai wilayah tugas</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_3" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_3" value="tidak"></td></tr>
+                <tr><td>4</td><td>Enumerator melakukan pencatatan lokasi hotspot secara lengkap</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_4" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_4" value="tidak"></td></tr>
+                <tr><td>5</td><td>Titik koordinat/GPS tercatat dengan benar</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_5" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_5" value="tidak"></td></tr>
+                <tr><td>6</td><td>Informasi hotspot sesuai dengan kondisi lapangan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_6" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_6" value="tidak"></td></tr>
+                <tr><td>7</td><td>Dokumentasi pendukung tersedia sesuai kebutuhan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_7" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_pelaksanaan_7" value="tidak"></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="eyebrow mb-2">C. Pemeriksaan Kualitas Data</div>
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle">
+              <thead class="table-light text-center">
+                <tr><th style="width: 60px;">No</th><th>Komponen Pemeriksaan</th><th style="width: 110px;">Ya</th><th style="width: 110px;">Tidak</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Data identitas hotspot terisi lengkap</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_1" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_1" value="tidak"></td></tr>
+                <tr><td>2</td><td>Status hotspot telah ditentukan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_2" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_2" value="tidak"></td></tr>
+                <tr><td>3</td><td>Tidak ditemukan duplikasi data hotspot</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_3" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_3" value="tidak"></td></tr>
+                <tr><td>4</td><td>Data telah melalui proses kroscek antar enumerator</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_4" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_4" value="tidak"></td></tr>
+                <tr><td>5</td><td>Data sesuai dengan definisi operasional yang ditetapkan</td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_5" value="ya"></td><td class="text-center"><input class="form-check-input" type="radio" name="sup_kualitas_5" value="tidak"></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="eyebrow mb-2">D. Hasil Supervisi</div>
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle">
+              <thead class="table-light text-center">
+                <tr><th style="width: 200px;">Uraian</th><th>Keterangan</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Temuan supervisi</td><td><textarea id="sup_temuan_supervisi" class="form-control" rows="2"></textarea></td></tr>
+                <tr><td>Kendala lapangan</td><td><textarea id="sup_kendala_lapangan" class="form-control" rows="2"></textarea></td></tr>
+                <tr><td>Perbaikan yang dibutuhkan</td><td><textarea id="sup_perbaikan_dibutuhkan" class="form-control" rows="2"></textarea></td></tr>
+                <tr><td>Tindak lanjut</td><td><textarea id="sup_tindak_lanjut" class="form-control" rows="2"></textarea></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="eyebrow mb-2">E. Kesimpulan Supervisi</div>
+          <div class="mb-4">
+            <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="sup_kesimpulan_1" value="pelaksanaan_sesuai_standar_dan_dapat_dilanjutkan"><label class="form-check-label" for="sup_kesimpulan_1">Pelaksanaan sesuai standar dan dapat dilanjutkan.</label></div>
+            <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="sup_kesimpulan_2" value="diperlukan_perbaikan_sebelum_proses_dilanjutkan"><label class="form-check-label" for="sup_kesimpulan_2">Diperlukan perbaikan sebelum proses dilanjutkan.</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="sup_kesimpulan_3" value="diperlukan_tindak_lanjut_khusus"><label class="form-check-label" for="sup_kesimpulan_3">Diperlukan tindak lanjut khusus.</label></div>
+          </div>
+
+          <div class="eyebrow mb-2">F. Pengesahan</div>
+          <div class="table-responsive mb-3">
+            <table class="table table-bordered align-middle mb-0">
+              <thead class="table-light text-center"><tr><th>Enumerator</th><th>Supervisor</th></tr></thead>
+              <tbody>
+                <tr><td><label class="form-label fw-bold" for="sup_pengesahan_nama_enumerator">Nama:</label><input id="sup_pengesahan_nama_enumerator" class="form-control" readonly></td><td><label class="form-label fw-bold" for="sup_pengesahan_nama_supervisor">Nama:</label><input id="sup_pengesahan_nama_supervisor" class="form-control" readonly></td></tr>
+                <tr><td><label class="form-label fw-bold" for="sup_pengesahan_tanggal_enumerator">Tanggal:</label><input id="sup_pengesahan_tanggal_enumerator" type="date" class="form-control"></td><td><label class="form-label fw-bold" for="sup_pengesahan_tanggal_supervisor">Tanggal:</label><input id="sup_pengesahan_tanggal_supervisor" type="date" class="form-control"></td></tr>
+                <tr><td><label class="form-label fw-bold" for="sup_pengesahan_tanda_tangan_enumerator">Tanda Tangan:</label><input id="sup_pengesahan_tanda_tangan_enumerator" class="form-control" placeholder="Nama / tanda tangan"></td><td><label class="form-label fw-bold" for="sup_pengesahan_tanda_tangan_supervisor">Tanda Tangan:</label><input id="sup_pengesahan_tanda_tangan_supervisor" class="form-control" placeholder="Nama / tanda tangan"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button><button type="submit" class="btn btn-warning" id="btnSaveSupervision"><i class="bi bi-save me-2"></i>Simpan Supervisi</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Form QC -->
+<div class="modal fade" id="modalEnumerator" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white"><h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>Input Data Pemetaan</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <form id="enumeratorForm">
+        <div class="modal-body p-4">
+          <div class="alert alert-info small"><i class="bi bi-info-circle me-2"></i>Field mengikuti XLSForm pemetaan. Data akan dikirim ke Kobo setelah tombol simpan ditekan.</div>
+          <div class="eyebrow mb-2">A. Informasi Pelaksanaan</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-bold">Nama Enumerator</label><input id="enum_nama_enumerator" class="form-control" readonly></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Organisasi / Komunitas Pelaksana *</label><select id="enum_organisasi_pelaksana" class="form-select" required><option value="">Pilih organisasi</option><option value="lgi">Yayasan Lingkar Gagasan Indonesia (LGI)</option><option value="igama">Yayasan IGAMA</option><option value="wamarapa">Wamarapa</option><option value="fatayat_nu">SSR Fatayat NU Jawa Timur (PENASUN)</option></select></div>
+          </div>
+
+          <div class="eyebrow mb-2">B. Identitas Hotspot</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-bold">Nama Hotspot *</label><input id="enum_nama_hotspot" class="form-control" required></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Kecamatan *</label><select id="enum_kecamatan" class="form-select" required><option value="">Pilih kecamatan</option></select></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Kelurahan *</label><select id="enum_kelurahan" class="form-select" required disabled><option value="">Pilih kecamatan dulu</option></select></div>
+            <div class="col-12"><label class="form-label fw-bold">Alamat atau Deskripsi Lokasi *</label><textarea id="enum_alamat_lengkap" class="form-control" rows="2" required></textarea></div>
+            <div class="col-md-7"><label class="form-label fw-bold" for="enum_titik_koordinat">Titik Koordinat GPS *</label><div class="input-group" id="enum_titik_koordinat_group"><input id="enum_titik_koordinat" class="form-control" placeholder="Tekan Gunakan GPS" readonly required aria-describedby="enum_gps_help"><button type="button" class="btn btn-outline-primary" onclick="useCurrentLocation()"><i class="bi bi-crosshair me-1"></i>Gunakan GPS</button></div><div id="enum_gps_help" class="gps-help">Koordinat hanya diambil dari lokasi perangkat. Input manual tidak tersedia. Nilai akurasi akan dicatat.</div></div>
+            <div class="col-md-5"><label class="form-label fw-bold" for="enum_foto_lokasi">Foto Dokumentasi Lokasi *</label><input id="enum_foto_lokasi" type="file" accept="image/*" capture="environment" class="form-control" required></div>
+          </div>
+
+          <div class="eyebrow mb-2">C. Karakteristik Hotspot</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><label class="form-label fw-bold">Status Hotspot *</label><select id="enum_status_hotspot" class="form-select" required><option value="">Pilih status</option><option value="aktif">Aktif</option><option value="baru">Baru</option><option value="tidak_aktif">Tidak Aktif</option><option value="perlu_klarifikasi">Perlu Klarifikasi</option><option value="lama">Lama</option></select></div>
+            <div class="col-md-8"><label class="form-label fw-bold d-block">Kategori Populasi Kunci *</label><div class="d-flex flex-wrap gap-3 pt-2"><label><input type="checkbox" name="enum_populasi_kunci" value="lsl" class="form-check-input me-1"> LSL</label><label><input type="checkbox" name="enum_populasi_kunci" value="transgender" class="form-check-input me-1"> Transgender</label><label><input type="checkbox" name="enum_populasi_kunci" value="idu" class="form-check-input me-1"> IDU / PWID</label><label><input type="checkbox" name="enum_populasi_kunci" value="pspl___tl__pekerja_seks_perempuan" class="form-check-input me-1"> PSPL / TL</label></div></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Tipe Lokasi Utama *</label><select id="enum_tipe_lokasi" class="form-select" required><option value="">Pilih tipe lokasi</option><option value="ruang_publik">Ruang Publik / Area Terbuka / Jalanan</option><option value="tempat_makan_hiburan">Tempat Makan / Nongkrong / Hiburan</option><option value="akomodasi_private">Akomodasi / Private Venue</option><option value="perawatan_kebugaran">Perawatan & Kebugaran</option><option value="platform_virtual">Platform Virtual / Online</option><option value="lainnya">Lainnya</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold">Detail Sub-Tipe Lokasi *</label><select id="enum_sub_tipe_lokasi" class="form-select" required><option value="">Pilih tipe utama dulu</option></select></div>
+            <div class="col-md-6" id="enum_tipe_lokasi_lainnya_wrap" hidden><label class="form-label fw-bold">Sebutkan Tipe Lokasi Lainnya *</label><input id="enum_tipe_lokasi_lainnya" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-bold d-block">Waktu Aktivitas Dominan *</label><div class="d-flex flex-wrap gap-3 pt-2"><label><input type="checkbox" name="enum_waktu_aktivitas" value="pagi" class="form-check-input me-1"> Pagi</label><label><input type="checkbox" name="enum_waktu_aktivitas" value="siang" class="form-check-input me-1"> Siang</label><label><input type="checkbox" name="enum_waktu_aktivitas" value="sore" class="form-check-input me-1"> Sore</label><label><input type="checkbox" name="enum_waktu_aktivitas" value="malam" class="form-check-input me-1"> Malam</label></div></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Jumlah Populasi</label><input id="enum_estimasi_jumlah_populasi" type="number" min="0" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Jumlah Diedukasi</label><input id="enum_jumlah_diedukasi" type="number" min="0" value="0" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Jumlah Tes HIV</label><input id="enum_jumlah_tes_hiv" type="number" min="0" value="0" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label fw-bold">Jumlah HIV+</label><input id="enum_jumlah_hiv_positif" type="number" min="0" value="0" class="form-control"></div>
+            <div class="col-12"><label class="form-label fw-bold">Catatan Tambahan Temuan Lapangan</label><textarea id="enum_catatan_lapangan" class="form-control" rows="2"></textarea></div>
+          </div>
+
+          <div class="eyebrow mb-2">D. Informasi Hasil Pemetaan</div>
+          <div class="row g-3">
+            <div class="col-md-4"><label class="form-label fw-bold">Sumber Informasi *</label><select id="enum_sumber_informasi" class="form-select" required><option value="">Pilih sumber</option><option value="populasi_kunci">Populasi kunci</option><option value="tokoh_kunci">Tokoh kunci</option><option value="observasi">Observasi Lapangan Langsung</option><option value="lainnya">Lainnya</option></select></div>
+            <div class="col-md-4"><label class="form-label fw-bold">No. HP Informan *</label><input id="enum_no_hp_informan" type="tel" pattern="[0-9+]{9,15}" class="form-control" required></div>
+            <div class="col-md-4"><label class="form-label fw-bold">Keterangan Aktivitas *</label><input id="enum_keterangan_aktivitas" class="form-control" required></div>
+            <div class="col-12"><label class="form-label fw-bold">Kondisi Hotspot Saat Pemetaan *</label><textarea id="enum_kondisi_saat_pemetaan" class="form-control" rows="2" required></textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-outline-success" onclick="saveEnumeratorDraft()"><i class="bi bi-save2 me-2"></i>Simpan Draf</button>
+          <button type="button" class="btn btn-outline-primary" onclick="loadEnumeratorDraft()"><i class="bi bi-folder2-open me-2"></i>Muat Draf</button>
+          <button type="button" class="btn btn-outline-danger" onclick="clearEnumeratorDraft()"><i class="bi bi-trash3 me-2"></i>Hapus Draf</button>
+          <button type="button" class="btn btn-outline-primary" onclick="fillRandomEnumeratorData()"><i class="bi bi-magic me-2"></i>Isi Uji Coba</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitEnumerator"><i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalQC" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white"><h5 class="modal-title fw-bold">Form Validasi Data (QC)</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body bg-light">
+        <form id="formQC">
+          <input type="hidden" id="qc_submission_id">
+          <div class="mb-4"><label class="form-label fw-bold text-primary mb-1">Identitas Hotspot yang Divalidasi:</label><input type="text" id="qc_nama_hotspot" class="form-control bg-white fw-bold" readonly></div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label fw-bold text-secondary">1. Pemeriksaan kelengkapan isian</label><select id="qc_kelengkapan" class="form-select border-secondary shadow-sm" required><option value="" selected disabled>-- Pilih Status Kelengkapan --</option><option value="lengkap">Lengkap & Sesuai Standar</option><option value="perlu_perbaikan">Perlu Perbaikan / Isian Belum Lengkap</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold text-secondary">2. Indikasi duplikasi hotspot</label><select id="qc_duplikasi" class="form-select border-secondary shadow-sm" required><option value="" selected disabled>-- Pilih Status Duplikasi --</option><option value="tidak_ada">Tidak Ada Indikasi Duplikasi</option><option value="ada">Ada Indikasi Duplikasi dengan Hotspot Lain</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold text-secondary">3. Hasil kroscek silang antar enumerator</label><select id="qc_kroscek" class="form-select border-secondary shadow-sm" required><option value="" selected disabled>-- Pilih Status Kroscek --</option><option value="sesuai">Sesuai Hasil Kroscek Silang</option><option value="perlu_klarifikasi">Perlu Klarifikasi Ulang Lapangan</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-bold text-danger">5. STATUS DATA AKHIR</label><select id="qc_status_final" class="form-select border-danger fw-bold shadow-sm" required><option value="" selected disabled>-- Pilih Status Data Akhir --</option><option value="valid">✅ Valid - Masuk Database Utama</option><option value="perlu_tindak_lanjut">⚠️ Perlu Tindak Lanjut (Tertunda)</option><option value="tidak_valid">❌ Tidak Valid - Ditolak</option></select></div>
+          </div>
+          <div class="mb-3 mt-4"><label class="form-label fw-bold text-secondary">4. Catatan data analis</label><textarea id="qc_catatan_analis" class="form-control border-secondary shadow-sm" rows="3"></textarea></div>
+          <div class="mb-3"><label class="form-label fw-bold text-secondary">F. Dokumentasi Pendukung / Persetujuan QC</label><input id="qc_dokumen_persetujuan" type="file" accept="image/*,.pdf,.doc,.docx" class="form-control"><div class="form-text">Terpisah dari dokumentasi pengesahan supervisi.</div></div>
+          <div class="row g-3 mb-2"><div class="col-md-6"><label class="form-label fw-bold text-secondary">Nama pemeriksa data</label><input type="text" id="qc_nama_pemeriksa" class="form-control border-secondary shadow-sm" placeholder="Cth: Angga / Data Analis" required></div><div class="col-md-6"><label class="form-label fw-bold text-secondary">Tanggal Pemeriksaan</label><input type="date" id="qc_tanggal_pemeriksaan" class="form-control border-secondary shadow-sm" readonly></div></div>
+        </form>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button><button type="button" class="btn btn-primary px-4 fw-bold shadow-sm" onclick="submitQCForm()" id="btnSaveQC"><i class="bi bi-cloud-upload me-2"></i>Simpan ke Kobo</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="noticeModal" class="floating-notice" aria-live="assertive" aria-atomic="true" role="alert">
+  <div class="floating-notice-card">
+    <div class="floating-notice-body">
+      <div id="noticeIcon" class="notice-icon notice-info"><i class="bi bi-info-circle-fill"></i></div>
+      <h5 id="noticeTitle" class="notice-title fw-bold mb-2">Pemberitahuan</h5>
+      <div id="noticeMessage" class="notice-message">-</div>
+    </div>
+    <div class="floating-notice-footer">
+      <button type="button" id="noticeActionButton" class="btn btn-primary" onclick="hideNotice()">Mengerti</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let map, markersGroup, chartKec, qcModalObj, enumeratorModalObj, supervisionModalObj, supervisionListModalObj, supervisionDetailModalObj, dataDetailModalObj;
+  let sessionToken = sessionStorage.getItem('dashboardSessionToken');
+  let currentUser = null;
+  let canEditQC = false;
+  let canSupervise = false;
+  let canDeleteData = false;
+  let canReviewData = false;
+  let supervisionRows = [];
+  let supervisionHistoryRows = [];
+  let dataDetailRecords = {};
+  let enumeratorGpsCaptured = false;
+  let enumeratorGpsAccuracy = null;
+  let enumeratorCorrectionId = null;
+  let dataLoadRequestId = 0;
+
+  document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener('error', event => reportRuntimeError(event.error || event.message));
+    window.addEventListener('unhandledrejection', event => reportRuntimeError(event.reason));
+    document.getElementById('loginPassword').addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleLogin();
+      }
+    });
+    if (typeof bootstrap !== 'undefined') {
+      qcModalObj = new bootstrap.Modal(document.getElementById('modalQC'));
+      enumeratorModalObj = new bootstrap.Modal(document.getElementById('modalEnumerator'));
+      supervisionModalObj = new bootstrap.Modal(document.getElementById('modalSupervision'));
+      supervisionListModalObj = new bootstrap.Modal(document.getElementById('modalSupervisionList'));
+      supervisionDetailModalObj = new bootstrap.Modal(document.getElementById('modalSupervisionDetail'));
+      dataDetailModalObj = new bootstrap.Modal(document.getElementById('modalDataDetail'));
+    }
+    document.getElementById('enumeratorForm').addEventListener('submit', submitEnumeratorForm);
+    document.getElementById('enumeratorForm').addEventListener('input', saveEnumeratorDraftSilently);
+    document.getElementById('enumeratorForm').addEventListener('change', saveEnumeratorDraftSilently);
+    document.getElementById('supervisionForm').addEventListener('submit', submitSupervisionForm);
+    document.getElementById('sup_nama_enumerator').addEventListener('change', fillSupervisionEnumerator);
+    document.getElementById('btnPrintSupervisionDetail').addEventListener('click', () => {
+      const selected = supervisionHistoryRows.find(row => row.supervisionId === document.getElementById('supervisionDetailBody').dataset.supervisionId);
+      if (selected) printSupervisionPdf(selected);
+    });
+    initializeEnumeratorForm();
+    const savedUser = sessionStorage.getItem('dashboardUser');
+    if (sessionToken && savedUser) {
+      try {
+        showDashboard(JSON.parse(savedUser));
+      } catch (error) {
+        sessionToken = null;
+        currentUser = null;
+        sessionStorage.removeItem('dashboardSessionToken');
+        sessionStorage.removeItem('dashboardUser');
+        showLogin();
+      }
+    } else {
+      showLogin();
+    }
+  });
+
+  // Skrip berada di akhir body, sehingga elemen tombol sudah tersedia di sini.
+  // Binding langsung menghindari kasus DOMContentLoaded telah berlalu pada
+  // pratinjau/editor tertentu.
+  document.getElementById('loginButton').addEventListener('click', handleLogin);
+
+  function handleLogin(event) {
+    if (event) event.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const button = document.getElementById('loginButton');
+    const errorBox = document.getElementById('loginError');
+
+    if (!username || !password) {
+      errorBox.textContent = 'Username dan sandi wajib diisi.';
+      errorBox.hidden = false;
+      (!username ? document.getElementById('loginUsername') : document.getElementById('loginPassword')).focus();
+      return false;
+    }
+
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...';
+    errorBox.hidden = true;
+
+    if (!window.google || !google.script || !google.script.run) {
+      errorBox.textContent = 'Login hanya dapat digunakan dari Web App Google Apps Script yang sudah dideploy.';
+      errorBox.hidden = false;
+      button.disabled = false;
+      button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+      return false;
+    }
+
+    google.script.run
+      .withSuccessHandler(result => {
+        if (!result || !result.success) {
+          errorBox.textContent = result ? result.message : 'Login gagal.';
+          errorBox.hidden = false;
+          button.disabled = false;
+          button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+          return;
+        }
+        sessionToken = result.token;
+        currentUser = result.user;
+        sessionStorage.setItem('dashboardSessionToken', sessionToken);
+        sessionStorage.setItem('dashboardUser', JSON.stringify(currentUser));
+        try {
+          showDashboard(currentUser);
+        } catch (error) {
+          reportRuntimeError(error);
+          button.disabled = false;
+          button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+        }
+      })
+      .withFailureHandler(error => {
+        const message = error && error.message ? error.message : String(error || 'Respons server tidak diketahui.');
+        errorBox.textContent = 'Tidak dapat menghubungi server: ' + message;
+        errorBox.hidden = false;
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+      })
+      .authenticateUser(username, password);
+    return false;
+  }
+
+  function showLogin() {
+    document.getElementById('loginView').hidden = false;
+    document.getElementById('appView').hidden = true;
+    document.getElementById('loginUsername').focus();
+  }
+
+  function showDashboard(user) {
+    currentUser = user;
+    const roleKey = String(user.role || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    const isEnumerator = roleKey === 'enumerator';
+    const isAdmin = roleKey === 'admin' || roleKey === 'administrator' || roleKey === 'adminstrator';
+    canEditQC = user.canEditQC === true || roleKey.includes('dataanalis') || roleKey.includes('dataanalyst') || roleKey.includes('koordinator') || roleKey.includes('kordinator');
+    canSupervise = roleKey.includes('supervisor') || roleKey.includes('koordinator') || roleKey.includes('kordinator');
+    canDeleteData = isAdmin;
+    canReviewData = canEditQC || canDeleteData;
+    document.body.classList.toggle('enumerator-mode', isEnumerator);
+    document.body.classList.toggle('admin-mode', isAdmin);
+    document.getElementById('enumeratorInputButton').hidden = roleKey !== 'enumerator';
+    document.getElementById('supervisionFormButton').hidden = !canSupervise;
+    document.getElementById('supervisionHistoryButton').hidden = !canSupervise;
+    document.getElementById('loginView').hidden = true;
+    document.getElementById('appView').hidden = false;
+    document.getElementById('userDisplay').textContent = user.name;
+    document.getElementById('roleDisplay').textContent = user.role ? '(' + user.role + ')' : '';
+    document.getElementById('qc_nama_pemeriksa').value = user.name;
+    document.getElementById('dashboardEyebrow').textContent = isEnumerator ? 'Pendataan Lapangan' : 'Monitoring & Quality Control';
+    document.getElementById('dashboardTitle').textContent = isEnumerator ? 'Dashboard Enumerator' : 'Dashboard Pendataan Hotspot';
+    document.getElementById('dashboardSubtitle').textContent = isEnumerator ? 'Kelola input dan pantau data hotspot yang Anda kirim.' : 'Ringkasan data survei lapangan dan status validasi kualitas secara real-time.';
+    document.getElementById('dataTableTitle').innerHTML = isEnumerator ? '<i class="bi bi-table me-2 text-success"></i>Data Pendataan Saya' : '<i class="bi bi-table me-2 text-success"></i>Data Survei & Quality Control';
+    document.getElementById('dataTableCaption').textContent = isEnumerator ? 'Pantau status validasi dan catatan tindak lanjut data yang Anda kirim.' : 'Pilih data untuk melakukan validasi analis';
+    initMap();
+    loadData();
+  }
+
+  function openEnumeratorForm() {
+    if (!currentUser || String(currentUser.role || '').trim().toLowerCase() !== 'enumerator') return;
+    document.getElementById('enumeratorForm').reset();
+    enumeratorCorrectionId = null;
+    enumeratorGpsCaptured = false;
+    enumeratorGpsAccuracy = null;
+    const gpsButton = document.querySelector('#enum_titik_koordinat_group button');
+    gpsButton.disabled = false;
+    gpsButton.innerHTML = '<i class="bi bi-crosshair me-1"></i>Gunakan GPS';
+    document.getElementById('enum_nama_enumerator').value = currentUser.name;
+    document.getElementById('enum_kelurahan').disabled = true;
+    document.getElementById('enum_kelurahan').innerHTML = '<option value="">Pilih kecamatan dulu</option>';
+    document.getElementById('enum_sub_tipe_lokasi').innerHTML = '<option value="">Pilih tipe utama dulu</option>';
+    document.getElementById('enum_tipe_lokasi_lainnya_wrap').hidden = true;
+    enumeratorModalObj.show();
+  }
+
+  function getEnumeratorDraftKey() {
+    const userKey = String(currentUser && currentUser.name || 'unknown').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    return 'enumeratorDraft:' + userKey;
+  }
+
+  function getEnumeratorDraftData() {
+    const form = document.getElementById('enumeratorForm');
+    const values = {};
+    form.querySelectorAll('input[id], select[id], textarea[id]').forEach(element => {
+      if (element.type === 'file') return;
+      values[element.id] = element.type === 'checkbox' || element.type === 'radio' ? element.checked : element.value;
+    });
+    const checks = {};
+    form.querySelectorAll('input[type="checkbox"][name]').forEach(element => {
+      if (!checks[element.name]) checks[element.name] = [];
+      if (element.checked) checks[element.name].push(element.value);
+    });
+    return {
+      values: values,
+      checks: checks,
+      gpsCaptured: enumeratorGpsCaptured,
+      gpsAccuracy: enumeratorGpsAccuracy,
+      correctionId: enumeratorCorrectionId,
+      savedAt: new Date().toISOString()
+    };
+  }
+
+  function saveEnumeratorDraftSilently() {
+    if (!currentUser || String(currentUser.role || '').trim().toLowerCase() !== 'enumerator') return;
+    try { localStorage.setItem(getEnumeratorDraftKey(), JSON.stringify(getEnumeratorDraftData())); } catch (error) { console.warn('Draf enumerator tidak dapat disimpan:', error); }
+  }
+
+  function saveEnumeratorDraft() {
+    saveEnumeratorDraftSilently();
+    showNotice('Draf tersimpan', 'Isian form disimpan di perangkat ini dan belum dikirim ke server.', 'success');
+  }
+
+  function loadEnumeratorDraft() {
+    let draft;
+    try { draft = JSON.parse(localStorage.getItem(getEnumeratorDraftKey()) || ''); } catch (error) { draft = null; }
+    if (!draft) return showNotice('Draf tidak ditemukan', 'Belum ada draf Enumerator yang tersimpan di perangkat ini.', 'info');
+    const values = draft.values || {};
+    Object.keys(values).forEach(id => {
+      const element = document.getElementById(id);
+      if (!element || element.type === 'file') return;
+      if (element.type === 'checkbox' || element.type === 'radio') element.checked = Boolean(values[id]);
+      else element.value = values[id];
+    });
+    if (document.getElementById('enum_kecamatan').value) {
+      const savedKelurahan = values.enum_kelurahan || '';
+      updateKelurahanOptions();
+      document.getElementById('enum_kelurahan').value = savedKelurahan;
+    }
+    if (document.getElementById('enum_tipe_lokasi').value) {
+      const savedSubType = values.enum_sub_tipe_lokasi || '';
+      updateSubTypeOptions();
+      document.getElementById('enum_sub_tipe_lokasi').value = savedSubType;
+    }
+    Object.keys(draft.checks || {}).forEach(name => {
+      const selected = draft.checks[name];
+      document.querySelectorAll('input[type="checkbox"][name="' + name + '"]').forEach(element => { element.checked = selected.includes(element.value); });
+    });
+    enumeratorGpsCaptured = draft.gpsCaptured === true;
+    enumeratorGpsAccuracy = draft.gpsAccuracy || null;
+    enumeratorCorrectionId = draft.correctionId || null;
+    if (enumeratorGpsCaptured) document.getElementById('enum_gps_help').textContent = 'GPS dari draf dimuat. Ambil ulang GPS jika lokasi berubah.';
+    showNotice('Draf dimuat', 'Draf terakhir berhasil dimuat. Foto dokumentasi harus dipilih ulang sebelum dikirim.', 'success');
+  }
+
+  function clearEnumeratorDraft() {
+    localStorage.removeItem(getEnumeratorDraftKey());
+    showNotice('Draf dihapus', 'Draf Enumerator pada perangkat ini sudah dihapus.', 'info');
+  }
+
+  function openEnumeratorCorrection(submissionId) {
+    const row = dataDetailRecords[String(submissionId)];
+    if (!row) return showNotice('Data tidak tersedia', 'Data yang akan diperbaiki tidak ditemukan.', 'warning');
+    openEnumeratorForm();
+    enumeratorCorrectionId = String(submissionId);
+    const setValue = (id, key) => {
+      const element = document.getElementById(id);
+      if (element) element.value = row[key] || '';
+    };
+    setValue('enum_organisasi_pelaksana', 'sec_a/organisasi_pelaksana');
+    setValue('enum_nama_hotspot', 'sec_b/nama_hotspot');
+    setValue('enum_kecamatan', 'sec_b/kecamatan');
+    updateKelurahanOptions();
+    setValue('enum_kelurahan', 'sec_b/kelurahan');
+    setValue('enum_alamat_lengkap', 'sec_b/alamat_lengkap');
+    setValue('enum_status_hotspot', 'sec_c/status_hotspot');
+    setValue('enum_tipe_lokasi', 'sec_c/tipe_lokasi');
+    updateSubTypeOptions();
+    setValue('enum_sub_tipe_lokasi', 'sec_c/sub_tipe_lokasi');
+    setValue('enum_tipe_lokasi_lainnya', 'sec_c/tipe_lokasi_lainnya');
+    setValue('enum_estimasi_jumlah_populasi', 'sec_c/Estimasi_Jumlah_Populasi_Kunci');
+    setValue('enum_jumlah_diedukasi', 'sec_c/jumlah_diedukasi');
+    setValue('enum_jumlah_tes_hiv', 'sec_c/jumlah_tes_hiv');
+    setValue('enum_jumlah_hiv_positif', 'sec_c/jumlah_hiv_positif');
+    setValue('enum_catatan_lapangan', 'sec_c/catatan_lapangan');
+    setValue('enum_sumber_informasi', 'sec_d/sumber_informasi');
+    setValue('enum_no_hp_informan', 'sec_d/no_hp_informan');
+    setValue('enum_keterangan_aktivitas', 'sec_d/keterangan_aktivitas');
+    setValue('enum_kondisi_saat_pemetaan', 'sec_d/kondisi_saat_pemetaan');
+    const setChecks = (name, value) => {
+      const selected = String(value || '').split(/\s+/).filter(Boolean);
+      document.querySelectorAll('input[name="' + name + '"]').forEach(input => { input.checked = selected.includes(input.value); });
+    };
+    setChecks('enum_populasi_kunci', row['sec_c/populasi_kunci']);
+    setChecks('enum_waktu_aktivitas', row['sec_c/waktu_aktivitas']);
+    showNotice('Perbaiki Data', 'Periksa kembali catatan QC, ambil GPS bila diperlukan, lalu pilih foto dokumentasi terbaru sebelum menyimpan.', 'info');
+  }
+
+
+  function openSupervisionList() {
+    const roleKey = String(currentUser && currentUser.role || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!roleKey.includes('supervisor') && !roleKey.includes('koordinator') && !roleKey.includes('kordinator')) return;
+    document.querySelector('#supervisionHistoryTable tbody').innerHTML = '<tr><td colspan="7" class="text-center text-muted">Memuat data...</td></tr>';
+    google.script.run.withSuccessHandler(result => {
+      if (!result || !result.success) return showNotice('Daftar supervisi tidak tersedia', result ? result.message : 'Data supervisi gagal dimuat.', 'warning');
+      supervisionHistoryRows = Array.isArray(result.history) ? result.history : [];
+      document.querySelector('#supervisionHistoryTable tbody').innerHTML = supervisionHistoryRows.length ? supervisionHistoryRows.map((row, index) => '<tr><td class="font-monospace">' + escapeHtml(row.supervisionId) + '</td><td>' + escapeHtml(humanize(row.namaEnumerator)) + '</td><td>' + escapeHtml(humanize(row.komunitasOrganisasi)) + '</td><td class="text-center">' + escapeHtml(row.jumlahHotspot) + '</td><td>' + escapeHtml(humanize(row.namaSupervisor)) + '</td><td>' + escapeHtml(row.tanggalSupervisi) + '</td><td class="text-nowrap"><button class="btn btn-sm btn-outline-primary me-1" onclick="openSupervisionDetail(' + index + ')"><i class="bi bi-eye me-1"></i>Detail</button><button class="btn btn-sm btn-outline-secondary" onclick="printSupervisionPdf(supervisionHistoryRows[' + index + '])"><i class="bi bi-printer me-1"></i>PDF</button></td></tr>').join('') : '<tr><td colspan="7" class="text-center text-muted">Belum ada supervisi tersimpan.</td></tr>';
+      supervisionListModalObj.show();
+    }).withFailureHandler(handleSessionError).getSupervisionWorkspace(sessionToken);
+  }
+
+  function openSupervisionDetail(index) {
+    const record = supervisionHistoryRows[index];
+    if (!record) return;
+    const body = document.getElementById('supervisionDetailBody');
+    body.dataset.supervisionId = record.supervisionId;
+    body.innerHTML = getSupervisionDetailMarkup(record);
+    supervisionDetailModalObj.show();
+  }
+
+  function getSupervisionDetailMarkup(record, forPrint) {
+    const fields = record.fields || {};
+    const fieldValue = key => fields[key] === undefined || fields[key] === null || String(fields[key]).trim() === '' ? '-' : String(fields[key]);
+    const displayValue = key => key === 'komunitas_organisasi' || key === 'kesimpulan_supervisi' || key === 'status_final' ? humanize(fieldValue(key)) : fieldValue(key);
+    const readOnlyField = (label, value, className) => '<div class="' + (className || 'col-md-6') + '"><label class="form-label fw-bold">' + label + '</label><div class="form-control bg-light" aria-readonly="true">' + escapeHtml(value) + '</div></div>';
+    const choice = (value, expected) => '<input class="form-check-input" type="radio" disabled' + (String(value).toLowerCase() === expected ? ' checked' : '') + '>';
+    const implementationRows = [
+      'Enumerator memahami tujuan dan metode pemetaan',
+      'Enumerator menggunakan instrumen pemetaan yang telah ditetapkan',
+      'Enumerator melakukan pengumpulan data sesuai wilayah tugas',
+      'Enumerator melakukan pencatatan lokasi hotspot secara lengkap',
+      'Titik koordinat/GPS tercatat dengan benar',
+      'Informasi hotspot sesuai dengan kondisi lapangan',
+      'Dokumentasi pendukung tersedia sesuai kebutuhan'
+    ];
+    const qualityRows = [
+      'Data identitas hotspot terisi lengkap',
+      'Status hotspot telah ditentukan',
+      'Tidak ditemukan duplikasi data hotspot',
+      'Data telah melalui proses kroscek antar enumerator',
+      'Data sesuai dengan definisi operasional yang ditetapkan'
+    ];
+    const radioRows = (prefix, labels) => labels.map((label, index) => {
+      const value = fieldValue(prefix + '_' + (index + 1));
+      return '<tr><td>' + (index + 1) + '</td><td>' + label + '</td><td class="text-center">' + choice(value, 'ya') + '</td><td class="text-center">' + choice(value, 'tidak') + '</td></tr>';
+    }).join('');
+    const conclusion = fieldValue('kesimpulan_supervisi');
+    const conclusionRow = (value, label) => '<div class="form-check mb-2"><input class="form-check-input" type="checkbox" disabled' + (conclusion.indexOf(value) !== -1 ? ' checked' : '') + '><label class="form-check-label">' + label + '</label></div>';
+    return '<div class="detail-form-view">' +
+      '<div class="text-center mb-4"><div class="eyebrow mb-2">FORM SUPERVISI LAPANGAN</div><h5 class="fw-bold mb-1">PEMETAAN HOTSPOT POPULASI KUNCI</h5><div class="text-muted small">KOTA MALANG TAHUN 2026</div></div>' +
+      '<div class="eyebrow mb-2">A. Identitas Supervisi</div><div class="row g-3 mb-4">' +
+        readOnlyField('ID Supervisi', record.supervisionId) +
+        (forPrint ? '' : readOnlyField('Tanggal supervisi', record.tanggalSupervisi)) +
+        readOnlyField('Lokasi/wilayah supervisi', fields.lokasi_wilayah || '-') +
+        readOnlyField('Nama supervisor', humanize(record.namaSupervisor)) +
+        readOnlyField('Nama enumerator (yang disupervisi)', humanize(record.namaEnumerator)) +
+        readOnlyField('Komunitas/Organisasi', displayValue('komunitas_organisasi')) +
+        readOnlyField('Jumlah hotspot yang dipantau', record.jumlahHotspot) +
+      '</div>' +
+      '<div class="eyebrow mb-2">B. Pemeriksaan Pelaksanaan Lapangan</div><div class="table-responsive mb-4"><table class="table table-bordered align-middle"><thead class="table-light text-center"><tr><th style="width: 60px;">No</th><th>Komponen Pemeriksaan</th><th style="width: 110px;">Ya</th><th style="width: 110px;">Tidak</th></tr></thead><tbody>' + radioRows('pelaksanaan', implementationRows) + '</tbody></table></div>' +
+      '<div class="eyebrow mb-2">C. Pemeriksaan Kualitas Data</div><div class="table-responsive mb-4"><table class="table table-bordered align-middle"><thead class="table-light text-center"><tr><th style="width: 60px;">No</th><th>Komponen Pemeriksaan</th><th style="width: 110px;">Ya</th><th style="width: 110px;">Tidak</th></tr></thead><tbody>' + radioRows('kualitas', qualityRows) + '</tbody></table></div>' +
+      '<div class="eyebrow mb-2">D. Hasil Supervisi</div><div class="table-responsive mb-4"><table class="table table-bordered align-middle"><thead class="table-light text-center"><tr><th style="width: 200px;">Uraian</th><th>Keterangan</th></tr></thead><tbody>' +
+        '<tr><td>Temuan supervisi</td><td>' + escapeHtml(fieldValue('temuan_supervisi')).replace(/\n/g, '<br>') + '</td></tr>' +
+        '<tr><td>Kendala lapangan</td><td>' + escapeHtml(fieldValue('kendala_lapangan')).replace(/\n/g, '<br>') + '</td></tr>' +
+        '<tr><td>Perbaikan yang dibutuhkan</td><td>' + escapeHtml(fieldValue('perbaikan_dibutuhkan')).replace(/\n/g, '<br>') + '</td></tr>' +
+        '<tr><td>Tindak lanjut</td><td>' + escapeHtml(fieldValue('tindak_lanjut')).replace(/\n/g, '<br>') + '</td></tr>' +
+      '</tbody></table></div>' +
+      '<div class="eyebrow mb-2">E. Kesimpulan Supervisi</div><div class="mb-4">' +
+        conclusionRow('pelaksanaan_sesuai_standar_dan_dapat_dilanjutkan', 'Pelaksanaan sesuai standar dan dapat dilanjutkan.') +
+        conclusionRow('diperlukan_perbaikan_sebelum_proses_dilanjutkan', 'Diperlukan perbaikan sebelum proses dilanjutkan.') +
+        conclusionRow('diperlukan_tindak_lanjut_khusus', 'Diperlukan tindak lanjut khusus.') +
+        '<div class="mt-3">' + readOnlyField('Status akhir', displayValue('status_final'), 'col-12') + '</div>' +
+      '</div>' +
+      '<div class="eyebrow mb-2">F. Pengesahan</div><div class="table-responsive mb-3"><table class="table table-bordered align-middle mb-0"><thead class="table-light text-center"><tr><th>Enumerator</th><th>Supervisor</th></tr></thead><tbody>' +
+        '<tr><td><strong>Nama:</strong> ' + escapeHtml(fieldValue('pengesahan_nama_enumerator')) + '</td><td><strong>Nama:</strong> ' + escapeHtml(fieldValue('pengesahan_nama_supervisor')) + '</td></tr>' +
+        '<tr><td><strong>Tanggal:</strong> ' + escapeHtml(fieldValue('pengesahan_tanggal_enumerator')) + '</td><td><strong>Tanggal:</strong> ' + escapeHtml(fieldValue('pengesahan_tanggal_supervisor')) + '</td></tr>' +
+        '<tr><td><strong>Tanda Tangan:</strong> ' + escapeHtml(fieldValue('pengesahan_tanda_tangan_enumerator')) + '</td><td><strong>Tanda Tangan:</strong> ' + escapeHtml(fieldValue('pengesahan_tanda_tangan_supervisor')) + '</td></tr>' +
+      '</tbody></table></div>' +
+    '</div>';
+  }
+
+  function formatSupervisionDetailValue(label, value) {
+    if (label === 'Dokumentasi Pendukung' && value && value !== '-') {
+      return '<a href="' + escapeHtml(value) + '" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Buka dokumen</a>';
+    }
+    return escapeHtml(value || '-').replace(/\n/g, '<br>');
+  }
+
+  function getDocumentationPreview(url, title = 'Preview Dokumentasi', buttonLabel = 'Buka di Drive') {
+    if (!url) return '<section class="mb-2"><div class="eyebrow mb-2">' + escapeHtml(title) + '</div><div class="text-muted small border rounded p-3">Dokumentasi belum tersedia.</div></section>';
+    const rawUrl = String(url);
+    const previewUrl = rawUrl.includes('/file/d/')
+      ? rawUrl.replace(/\/view(?:\?.*)?$/, '/preview')
+      : rawUrl.match(/[?&]id=([^&]+)/)
+        ? 'https://drive.google.com/file/d/' + rawUrl.match(/[?&]id=([^&]+)/)[1] + '/preview'
+        : rawUrl;
+    return '<section class="mb-3"><div class="eyebrow mb-2">' + escapeHtml(title) + '</div><div class="ratio ratio-4x3 border rounded overflow-hidden bg-light"><iframe src="' + escapeHtml(previewUrl) + '" title="' + escapeHtml(title) + '" allow="autoplay"></iframe></div><a href="' + escapeHtml(rawUrl) + '" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary mt-2"><i class="bi bi-box-arrow-up-right me-1"></i>' + escapeHtml(buttonLabel) + '</a></section>';
+  }
+
+  function getSupervisionDetailSections(record) {
+    const fields = record.fields || {};
+    const value = key => fields[key] === undefined || fields[key] === '' ? '-' : key === 'dokumentasi_url' ? String(fields[key]) : humanize(fields[key]);
+    return [
+      {
+        title: 'A. Identitas Supervisi',
+        rows: [['ID Supervisi', record.supervisionId], ['Tanggal Supervisi', record.tanggalSupervisi], ['Lokasi/Wilayah', fields.lokasi_wilayah || '-'], ['Nama Supervisor', humanize(record.namaSupervisor)], ['Nama Enumerator', humanize(record.namaEnumerator)], ['Organisasi', record.komunitasOrganisasi], ['Jumlah Hotspot Dipantau', record.jumlahHotspot]]
+      },
+      {
+        title: 'B. Pemeriksaan Pelaksanaan Lapangan',
+        rows: [1, 2, 3, 4, 5, 6, 7].map(index => ['B' + index + '. Pemeriksaan ' + index, value('pelaksanaan_' + index)])
+      },
+      {
+        title: 'C. Pemeriksaan Kualitas Data',
+        rows: [1, 2, 3, 4, 5].map(index => ['C' + index + '. Pemeriksaan ' + index, value('kualitas_' + index)])
+      },
+      {
+        title: 'D. Hasil Supervisi',
+        rows: [['Temuan Supervisi', value('temuan_supervisi')], ['Kendala Lapangan', value('kendala_lapangan')], ['Perbaikan Dibutuhkan', value('perbaikan_dibutuhkan')], ['Tindak Lanjut', value('tindak_lanjut')]]
+      },
+      {
+        title: 'E. Kesimpulan Supervisi',
+        rows: [['Kesimpulan', value('kesimpulan_supervisi')], ['Status Akhir', value('status_final')]]
+      },
+      {
+        title: 'F. Pengesahan',
+        rows: [['Nama Enumerator', value('pengesahan_nama_enumerator')], ['Nama Supervisor', value('pengesahan_nama_supervisor')], ['Tanggal Enumerator', value('pengesahan_tanggal_enumerator')], ['Tanggal Supervisor', value('pengesahan_tanggal_supervisor')], ['Tanda Tangan Enumerator', value('pengesahan_tanda_tangan_enumerator')], ['Tanda Tangan Supervisor', value('pengesahan_tanda_tangan_supervisor')]]
+      }
+    ];
+  }
+
+  function getSupervisionDetailRows(record) {
+    const fields = record.fields || {};
+    const labels = {
+      pelaksanaan_1: 'B1. Enumerator memahami tujuan dan metode pemetaan', pelaksanaan_2: 'B2. Enumerator menggunakan instrumen pemetaan yang ditetapkan', pelaksanaan_3: 'B3. Pengumpulan data sesuai wilayah tugas', pelaksanaan_4: 'B4. Pencatatan lokasi hotspot lengkap', pelaksanaan_5: 'B5. Titik koordinat/GPS tercatat benar', pelaksanaan_6: 'B6. Informasi hotspot sesuai kondisi lapangan', pelaksanaan_7: 'B7. Dokumentasi pendukung tersedia',
+      kualitas_1: 'C1. Data identitas hotspot lengkap', kualitas_2: 'C2. Status hotspot telah ditentukan', kualitas_3: 'C3. Tidak ada duplikasi data hotspot', kualitas_4: 'C4. Kroscek antar enumerator dilakukan', kualitas_5: 'C5. Data sesuai definisi operasional',
+      temuan_supervisi: 'D1. Temuan supervisi', kendala_lapangan: 'D2. Kendala lapangan', perbaikan_dibutuhkan: 'D3. Perbaikan yang dibutuhkan', tindak_lanjut: 'D4. Tindak lanjut',
+      kesimpulan_supervisi: 'E. Kesimpulan supervisi', status_final: 'Status akhir', pengesahan_nama_enumerator: 'F. Nama enumerator', pengesahan_nama_supervisor: 'F. Nama supervisor', pengesahan_tanggal_enumerator: 'F. Tanggal enumerator', pengesahan_tanggal_supervisor: 'F. Tanggal supervisor', pengesahan_tanda_tangan_enumerator: 'F. Tanda tangan enumerator', pengesahan_tanda_tangan_supervisor: 'F. Tanda tangan supervisor'
+    };
+    const rows = [
+      ['ID Supervisi', record.supervisionId], ['Tanggal Supervisi', record.tanggalSupervisi], ['Lokasi/Wilayah', fields.lokasi_wilayah || '-'],
+      ['Nama Supervisor', humanize(record.namaSupervisor)], ['Nama Enumerator', humanize(record.namaEnumerator)], ['Organisasi', record.komunitasOrganisasi], ['Jumlah Hotspot Dipantau', record.jumlahHotspot]
+    ];
+    Object.keys(labels).forEach(key => {
+      const value = fields[key];
+      if (value !== undefined && value !== null && String(value).trim() !== '') rows.push([labels[key], key === 'dokumentasi_url' ? String(value) : humanize(value)]);
+    });
+    return rows;
+  }
+
+  function printSupervisionPdf(record) {
+    if (!record) return;
+    showNotice('Membuat PDF', 'Dokumen sedang dibuat dengan Google Drive.', 'info');
+    google.script.run.withSuccessHandler(result => {
+      if (!result || !result.success) return showNotice('PDF belum dibuat', result ? result.message : 'Pembuatan PDF gagal.', 'warning');
+      showNotice('PDF siap', result.message, 'success');
+      const actionButton = document.getElementById('noticeActionButton');
+      actionButton.textContent = 'Buka PDF';
+      actionButton.onclick = () => {
+        window.open(result.url, '_blank', 'noopener');
+        hideNotice();
+      };
+    }).withFailureHandler(handleSessionError).generateSupervisionPdf(sessionToken, record.supervisionId);
+  }
+
+  function openSupervisionForm(selectedEnumerator, selectedCount, selectedLocation) {
+    document.getElementById('supervisionForm').reset();
+    const enumeratorSelect = document.getElementById('sup_nama_enumerator');
+    enumeratorSelect.innerHTML = '<option value="">Memuat daftar enumerator...</option>';
+    enumeratorSelect.disabled = true;
+    document.getElementById('sup_nama_supervisor').value = currentUser ? currentUser.name : '';
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById('sup_pengesahan_nama_supervisor').value = currentUser ? currentUser.name : '';
+    document.getElementById('sup_tanggal_supervisi').value = today;
+    document.getElementById('sup_pengesahan_tanggal_enumerator').value = today;
+    document.getElementById('sup_pengesahan_tanggal_supervisor').value = today;
+    supervisionListModalObj.hide();
+    supervisionModalObj.show();
+    google.script.run.withSuccessHandler(result => {
+      if (!result || !result.success) {
+        enumeratorSelect.innerHTML = '<option value="">Data enumerator tidak tersedia</option>';
+        enumeratorSelect.disabled = true;
+        return showNotice('Data enumerator tidak tersedia', result ? result.message : 'Data enumerator gagal dimuat.', 'warning');
+      }
+      supervisionRows = Array.isArray(result.enumerators) ? result.enumerators : [];
+      enumeratorSelect.innerHTML = '<option value="">Pilih enumerator</option>' + supervisionRows.map(row => '<option value="' + escapeHtml(row.enumerator) + '">' + escapeHtml(row.enumerator) + ' (' + escapeHtml(row.jumlahHotspot) + ' hotspot)</option>').join('');
+      enumeratorSelect.disabled = false;
+      if (selectedEnumerator) {
+        enumeratorSelect.value = String(selectedEnumerator);
+        fillSupervisionEnumerator();
+      }
+    }).withFailureHandler(handleSessionError).getSupervisionWorkspace(sessionToken);
+  }
+
+  function fillSupervisionEnumerator() {
+    const selectedName = document.getElementById('sup_nama_enumerator').value;
+    const selected = supervisionRows.find(row => String(row.enumerator) === String(selectedName));
+    document.getElementById('sup_jumlah_hotspot').value = selected ? String(selected.jumlahHotspot) : '0';
+    document.getElementById('sup_lokasi_wilayah').value = selected ? String(selected.wilayah || '') : '';
+    document.getElementById('sup_pengesahan_nama_enumerator').value = selected ? String(selected.enumerator) : '';
+  }
+
+  function submitSupervisionForm(event) {
+    event.preventDefault();
+    const form = document.getElementById('supervisionForm');
+    if (!form.reportValidity()) return;
+    const button = document.getElementById('btnSaveSupervision');
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+    const collectRadioValues = (namePrefix, total) => {
+      const values = [];
+      for (let i = 1; i <= total; i++) {
+        const checked = document.querySelector('input[name="' + namePrefix + '_' + i + '"]:checked');
+        values.push(checked ? checked.value : '');
+      }
+      return values;
+    };
+
+    const collectConclusion = () => {
+      const checked = document.querySelectorAll('input[type="checkbox"][id^="sup_kesimpulan_"]:checked');
+      if (!checked.length) return '';
+      const values = Array.from(checked).map(item => item.value);
+      if (values.includes('pelaksanaan_sesuai_standar_dan_dapat_dilanjutkan')) return 'valid';
+      if (values.includes('diperlukan_perbaikan_sebelum_proses_dilanjutkan')) return 'perlu_tindak_lanjut';
+      if (values.includes('diperlukan_tindak_lanjut_khusus')) return 'tidak_valid';
+      return 'valid';
+    };
+
+    const send = fileData => {
+      const supervisionData = {
+        tanggalSupervisi: document.getElementById('sup_tanggal_supervisi').value,
+        lokasiWilayah: document.getElementById('sup_lokasi_wilayah').value.trim(),
+        namaSupervisor: document.getElementById('sup_nama_supervisor').value.trim(),
+        namaEnumerator: document.getElementById('sup_nama_enumerator').value.trim(),
+        komunitasOrganisasi: document.getElementById('sup_komunitas_organisasi').value.trim(),
+        jumlahHotspot: document.getElementById('sup_jumlah_hotspot').value,
+        sup_pelaksanaan_1: collectRadioValues('sup_pelaksanaan', 7)[0],
+        sup_pelaksanaan_2: collectRadioValues('sup_pelaksanaan', 7)[1],
+        sup_pelaksanaan_3: collectRadioValues('sup_pelaksanaan', 7)[2],
+        sup_pelaksanaan_4: collectRadioValues('sup_pelaksanaan', 7)[3],
+        sup_pelaksanaan_5: collectRadioValues('sup_pelaksanaan', 7)[4],
+        sup_pelaksanaan_6: collectRadioValues('sup_pelaksanaan', 7)[5],
+        sup_pelaksanaan_7: collectRadioValues('sup_pelaksanaan', 7)[6],
+        sup_kualitas_1: collectRadioValues('sup_kualitas', 5)[0],
+        sup_kualitas_2: collectRadioValues('sup_kualitas', 5)[1],
+        sup_kualitas_3: collectRadioValues('sup_kualitas', 5)[2],
+        sup_kualitas_4: collectRadioValues('sup_kualitas', 5)[3],
+        sup_kualitas_5: collectRadioValues('sup_kualitas', 5)[4],
+        temuanSupervisi: document.getElementById('sup_temuan_supervisi').value.trim(),
+        kendalaLapangan: document.getElementById('sup_kendala_lapangan').value.trim(),
+        perbaikanYangDibutuhkan: document.getElementById('sup_perbaikan_dibutuhkan').value.trim(),
+        tindakLanjut: document.getElementById('sup_tindak_lanjut').value.trim(),
+        kesimpulanSupervisi: collectConclusion(),
+        statusFinal: collectConclusion(),
+        pengesahanNamaEnumerator: document.getElementById('sup_pengesahan_nama_enumerator').value.trim(),
+        pengesahanNamaSupervisor: document.getElementById('sup_pengesahan_nama_supervisor').value.trim(),
+        pengesahanTanggalEnumerator: document.getElementById('sup_pengesahan_tanggal_enumerator').value,
+        pengesahanTanggalSupervisor: document.getElementById('sup_pengesahan_tanggal_supervisor').value,
+        pengesahanTandaTanganEnumerator: document.getElementById('sup_pengesahan_tanda_tangan_enumerator').value.trim(),
+        pengesahanTandaTanganSupervisor: document.getElementById('sup_pengesahan_tanda_tangan_supervisor').value.trim()
+      };
+
+      google.script.run.withSuccessHandler(result => {
+        showNotice(result && result.success ? 'Supervisi tersimpan' : 'Supervisi belum tersimpan', result ? result.message : 'Data selesai diproses.', result && result.success ? 'success' : 'warning');
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-save me-2"></i>Simpan Supervisi';
+        if (result && result.success) supervisionModalObj.hide();
+      }).withFailureHandler(error => {
+        handleSessionError(error);
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-save me-2"></i>Simpan Supervisi';
+      }).saveSupervision(sessionToken, supervisionData);
+    };
+
+    send();
+  }
+
+  async function fillRandomEnumeratorData() {
+    const randomFrom = arr => arr[Math.floor(Math.random() * arr.length)];
+    const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const kecamatanMap = {
+      blimbing: ['arjosari', 'balearjosari', 'bimbing', 'kesatrian', 'polehan'],
+      kedungkandang: ['arjowinangun', 'buring', 'kedungkandang', 'madyopuro', 'sawojajar'],
+      klojen: ['bareng', 'kasin', 'kauman', 'klojen', 'oro_oro_dowo'],
+      lowokwaru: ['dinoyo', 'jatimulyo', 'ketawanggede', 'lowokwaru', 'tlogomas'],
+      sukun: ['bandulan', 'gadang', 'kebonsari', 'sukun', 'tanjungrejo']
+    };
+
+    const kecamatan = randomFrom(Object.keys(kecamatanMap));
+    const kelurahan = randomFrom(kecamatanMap[kecamatan]);
+    const tipeLokasi = randomFrom(['ruang_publik', 'tempat_makan_hiburan', 'akomodasi_private', 'perawatan_kebugaran', 'platform_virtual', 'lainnya']);
+    const statusHotspot = randomFrom(['aktif', 'baru', 'tidak_aktif', 'perlu_klarifikasi', 'lama']);
+    const sourceInformasi = randomFrom(['populasi_kunci', 'tokoh_kunci', 'observasi', 'lainnya']);
+    const organisasi = randomFrom(['lgi', 'igama', 'wamarapa', 'fatayat_nu']);
+
+    document.getElementById('enum_organisasi_pelaksana').value = organisasi;
+    document.getElementById('enum_nama_hotspot').value = 'Hotspot ' + randomFrom(['Malam', 'Pusat', 'Sore', 'Kampung', 'Baru', 'Kunci']) + ' ' + randomInt(1, 99);
+    document.getElementById('enum_kecamatan').value = kecamatan;
+    updateKelurahanOptions();
+    setTimeout(() => {
+      document.getElementById('enum_kelurahan').value = kelurahan;
+    }, 20);
+
+    document.getElementById('enum_alamat_lengkap').value = 'Jln. ' + randomFrom(['Soekarno Hatta', 'Bunga', 'Candi', 'Suryo', 'Raya Tlogomas', 'Mayjen Sungkono']) + ' No. ' + randomInt(10, 200) + ' ' + randomFrom(['RT 02', 'RW 01', 'Kec. Malang', 'Dekat pasar', 'Depan gang']);
+    document.getElementById('enum_titik_koordinat').value = '';
+    document.getElementById('enum_status_hotspot').value = statusHotspot;
+    document.getElementById('enum_sumber_informasi').value = sourceInformasi;
+    document.getElementById('enum_no_hp_informan').value = '08' + randomInt(100000000, 999999999);
+    document.getElementById('enum_keterangan_aktivitas').value = randomFrom(['Mencari pelanggan', 'Aktivitas malam hari', 'Berinteraksi dengan komunitas', 'Transaksi rutin', 'Kegiatan nongkrong']);
+    document.getElementById('enum_kondisi_saat_pemetaan').value = randomFrom(['Kondisi ramai dan terpantau', 'Cukup padat dengan beberapa titik aktivitas', 'Tampak aktif namun belum terlalu ramai', 'Aktivitas sedang berlangsung']);
+    document.getElementById('enum_estimasi_jumlah_populasi').value = String(randomInt(10, 90));
+    document.getElementById('enum_jumlah_diedukasi').value = String(randomInt(5, 40));
+    document.getElementById('enum_jumlah_tes_hiv').value = String(randomInt(2, 35));
+    document.getElementById('enum_jumlah_hiv_positif').value = String(randomInt(0, 8));
+    document.getElementById('enum_catatan_lapangan').value = 'Uji coba otomatis untuk validasi form dan alur submit data.';
+
+    document.querySelectorAll('input[name="enum_populasi_kunci"]').forEach(input => {
+      input.checked = Math.random() > 0.5;
+    });
+    document.querySelectorAll('input[name="enum_waktu_aktivitas"]').forEach(input => {
+      input.checked = Math.random() > 0.5;
+    });
+
+    const selectedPop = Array.from(document.querySelectorAll('input[name="enum_populasi_kunci"]:checked')).map(input => input.value);
+    const selectedTime = Array.from(document.querySelectorAll('input[name="enum_waktu_aktivitas"]:checked')).map(input => input.value);
+    if (!selectedPop.length) {
+      document.querySelector('input[name="enum_populasi_kunci"][value="lsl"]').checked = true;
+    }
+    if (!selectedTime.length) {
+      document.querySelector('input[name="enum_waktu_aktivitas"][value="malam"]').checked = true;
+    }
+
+    document.getElementById('enum_tipe_lokasi').value = tipeLokasi;
+    updateSubTypeOptions();
+    setTimeout(() => {
+      const subTipe = document.getElementById('enum_sub_tipe_lokasi');
+      if (subTipe && subTipe.options.length > 1) {
+        subTipe.value = subTipe.options[randomInt(1, subTipe.options.length - 1)].value;
+      }
+      if (tipeLokasi === 'lainnya') {
+        document.getElementById('enum_tipe_lokasi_lainnya').value = 'Lokasi uji coba';
+      }
+    }, 30);
+
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 420;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#dff8f5';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f9f94';
+      ctx.fillRect(30, 30, 180, 120);
+      ctx.fillStyle = '#f3f6fb';
+      ctx.fillRect(230, 30, 360, 180);
+      ctx.fillStyle = '#172235';
+      ctx.font = 'bold 32px Arial';
+      ctx.fillText('HOTSPOT TEST', 260, 110);
+      ctx.font = '20px Arial';
+      ctx.fillText('Foto dokumentasi uji coba', 260, 160);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+      if (blob) {
+        const file = new File([blob], 'foto-uji-coba.jpg', { type: 'image/jpeg' });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById('enum_foto_lokasi').files = dt.files;
+      }
+    } catch (e) {
+      console.warn('Auto-fill foto test gagal:', e);
+    }
+  }
+
+  function initializeEnumeratorForm() {
+    const kecamatanOptions = [
+      ['blimbing', 'Kecamatan Blimbing'], ['kedungkandang', 'Kecamatan Kedungkandang'],
+      ['klojen', 'Kecamatan Klojen'], ['lowokwaru', 'Kecamatan Lowokwaru'], ['sukun', 'Kecamatan Sukun']
+    ];
+    populateOptions('enum_kecamatan', kecamatanOptions, 'Pilih kecamatan');
+    document.getElementById('enum_kecamatan').addEventListener('change', updateKelurahanOptions);
+    document.getElementById('enum_tipe_lokasi').addEventListener('change', updateSubTypeOptions);
+  }
+
+  function populateOptions(selectId, options, placeholder) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = '<option value="">' + placeholder + '</option>' + options.map(option => '<option value="' + escapeHtml(option[0]) + '">' + escapeHtml(option[1]) + '</option>').join('');
+  }
+
+  function updateKelurahanOptions() {
+    const kecamatan = document.getElementById('enum_kecamatan').value;
+    const kelurahan = {
+      blimbing: [['arjosari','Kel. Arjosari'],['balearjosari','Kel. Balearjosari'],['blimbing','Kel. Blimbing'],['bunulrejo','Kel. Bunulrejo'],['jodipan','Kel. Jodipan'],['kesatrian','Kel. Kesatrian'],['pandanwangi','Kel. Pandanwangi'],['polehan','Kel. Polehan'],['polowijen','Kel. Polowijen'],['purwantoro','Kel. Purwantoro'],['purwodadi','Kel. Purwodadi']],
+      kedungkandang: [['arjowinangun','Kel. Arjowinangun'],['bumiayu','Kel. Bumiayu'],['buring','Kel. Buring'],['cemorokandang','Kel. Cemorokandang'],['kedungkandang','Kel. Kedungkandang'],['kotalama','Kel. Kotalama'],['lesanpuro','Kel. Lesanpuro'],['madyopuro','Kel. Madyopuro'],['mergosono','Kel. Mergosono'],['sawojajar','Kel. Sawojajar'],['tlogowaru','Kel. Tlogowaru'],['wonokoyo','Kel. Wonokoyo']],
+      klojen: [['bareng','Kel. Bareng'],['gadingasri','Kel. Gadingasri'],['kasin','Kel. Kasin'],['kauman','Kel. Kauman'],['kiduldalem','Kel. Kiduldalem'],['klojen','Kel. Klojen'],['oro_oro_dowo','Kel. Oro-Oro Dowo'],['penanggungan','Kel. Penanggungan'],['rampal_celaket','Kel. Rampal Celaket'],['samaan','Kel. Samaan'],['sukoharjo','Kel. Sukoharjo']],
+      lowokwaru: [['dinoyo','Kel. Dinoyo'],['jatimulyo','Kel. Jatimulyo'],['karangbesuki','Kel. Karangbesuki'],['ketawanggede','Kel. Ketawanggede'],['lowokwaru','Kel. Lowokwaru'],['merjosari','Kel. Merjosari'],['mojolangu','Kel. Mojolangu'],['sumbersari','Kel. Sumbersari'],['tasikmadu','Kel. Tasikmadu'],['tlogomas','Kel. Tlogomas'],['tulusrejo','Kel. Tulusrejo'],['tunggulwulung','Kel. Tunggulwulung']],
+      sukun: [['bakalankrajan','Kel. Bakalankrajan'],['bandulan','Kel. Bandulan'],['bandungrejosari','Kel. Bandungrejosari'],['ciptomulyo','Kel. Ciptomulyo'],['gadang','Kel. Gadang'],['kebonsari','Kel. Kebonsari'],['mulyorejo','Kel. Mulyorejo'],['pisangcandi','Kel. Pisangcandi'],['sukun','Kel. Sukun'],['tanjungrejo','Kel. Tanjungrejo']]
+    };
+    const select = document.getElementById('enum_kelurahan');
+    select.disabled = !kecamatan;
+    populateOptions('enum_kelurahan', kelurahan[kecamatan] || [], kecamatan ? 'Pilih kelurahan' : 'Pilih kecamatan dulu');
+  }
+
+  function updateSubTypeOptions() {
+    const tipe = document.getElementById('enum_tipe_lokasi').value;
+    const subTypes = {
+      ruang_publik: [['jalanan_mangkal','Jalanan / Titik Mangkal'],['taman_kota','Taman Kota / Alun-Alun / Halaman'],['stasiun_terminal','Stasiun / Terminal / Halte'],['bangunan_kosong','Bangunan Kosong / Mangkrak'],['ruang_publik_lainnya','Lainnya']],
+      tempat_makan_hiburan: [['warung_makan','Warung Kopi / Warung Makan'],['kafe_restoran','Kafe / Restoran'],['bar_club','Bar / Club / Diskotik'],['karaoke','Karaoke (Hall / Room)'],['tempat_makan_lainnya','Lainnya']],
+      akomodasi_private: [['kos_apartemen','Kos / Apartemen'],['rumah_tinggal','Rumah Tinggal / Kontrakan'],['penginapan_hotel','Penginapan / Hotel / Losmen'],['akomodasi_lainnya','Lainnya']],
+      perawatan_kebugaran: [['salon','Salon'],['spa_gym','Spa / Sauna / Gym'],['panti_pijat','Panti Pijat'],['perawatan_lainnya','Lainnya']],
+      platform_virtual: [['aplikasi_kencan','Aplikasi Kencan'],['media_sosial','Media Sosial & Grup Chat'],['virtual_lainnya','Lainnya']],
+      lainnya: [['lainnya','Lainnya']]
+    };
+    populateOptions('enum_sub_tipe_lokasi', subTypes[tipe] || [], tipe ? 'Pilih sub-tipe lokasi' : 'Pilih tipe utama dulu');
+    document.getElementById('enum_tipe_lokasi_lainnya_wrap').hidden = tipe !== 'lainnya';
+  }
+
+  function useCurrentLocation() {
+    if (!navigator.geolocation) return showNotice('GPS tidak tersedia', 'Browser tidak mendukung GPS.', 'warning');
+    const gpsInput = document.getElementById('enum_titik_koordinat');
+    const gpsButton = document.querySelector('#enum_titik_koordinat_group button');
+    const gpsHelp = document.getElementById('enum_gps_help');
+    const accuracyLimit = 30;
+    const preferredAccuracy = 20;
+    const requiredSamples = 2;
+    const maxSearchTime = 8000;
+    const samples = [];
+    let watchId = null;
+    let finished = false;
+    const finish = (bestSample, message, type) => {
+      if (finished) return;
+      finished = true;
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      gpsButton.disabled = false;
+      if (bestSample) {
+        gpsInput.value = bestSample.latitude + ', ' + bestSample.longitude;
+        enumeratorGpsCaptured = true;
+        enumeratorGpsAccuracy = bestSample.accuracy;
+        gpsButton.innerHTML = '<i class="bi bi-check2-circle me-1"></i>GPS Tersimpan';
+        if (bestSample.accuracy <= accuracyLimit) {
+          gpsHelp.textContent = 'GPS tersimpan. Sistem memilih akurasi terbaik: sekitar ' + Math.round(bestSample.accuracy) + ' meter.';
+        } else {
+          gpsHelp.textContent = 'GPS tersimpan dengan catatan: akurasi sekitar ' + Math.round(bestSample.accuracy) + ' meter.';
+        }
+        return;
+      }
+      enumeratorGpsCaptured = false;
+      enumeratorGpsAccuracy = null;
+      gpsInput.value = '';
+      gpsButton.innerHTML = '<i class="bi bi-crosshair me-1"></i>Coba Lagi';
+      gpsHelp.textContent = 'Sistem belum memperoleh akurasi maksimal 30 meter.';
+      if (message) showNotice('GPS belum cukup akurat', message, type || 'warning');
+    };
+    enumeratorGpsCaptured = false;
+    enumeratorGpsAccuracy = null;
+    gpsInput.value = '';
+    gpsButton.disabled = true;
+    gpsButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Mencari GPS terbaik...';
+    gpsHelp.textContent = 'Sistem sedang mengambil beberapa pembacaan dan memilih yang paling akurat.';
+    watchId = navigator.geolocation.watchPosition(position => {
+      const accuracy = Number(position.coords.accuracy);
+      if (!Number.isFinite(accuracy)) return;
+      samples.push({ latitude: position.coords.latitude, longitude: position.coords.longitude, accuracy: accuracy });
+      samples.sort((first, second) => first.accuracy - second.accuracy);
+      gpsHelp.textContent = 'Pembacaan GPS ' + Math.min(samples.length, requiredSamples) + '/' + requiredSamples + '... akurasi terbaik ' + Math.round(samples[0].accuracy) + ' meter.';
+      if (samples[0].accuracy <= preferredAccuracy || (samples.length >= requiredSamples && samples[0].accuracy <= accuracyLimit)) finish(samples[0]);
+    }, error => finish(null, error.message || 'Sistem tidak dapat membaca lokasi perangkat.', 'warning'), { enableHighAccuracy: true, maximumAge: 0, timeout: maxSearchTime });
+    setTimeout(() => {
+      const bestSample = samples.length ? samples[0] : null;
+      finish(bestSample, bestSample ? 'Sistem sudah mencoba beberapa pembacaan, tetapi akurasi terbaik masih di atas 30 meter.' : 'Sistem tidak mendapatkan pembacaan lokasi dari perangkat.', 'warning');
+    }, maxSearchTime);
+  }
+
+  function submitEnumeratorForm(event) {
+    event.preventDefault();
+    const form = document.getElementById('enumeratorForm');
+    if (!form.reportValidity()) return;
+    const selectedValues = name => Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(input => input.value);
+    const populasi = selectedValues('enum_populasi_kunci');
+    const waktu = selectedValues('enum_waktu_aktivitas');
+    if (!populasi.length || !waktu.length) return showNotice('Data belum lengkap', 'Pilih minimal satu populasi kunci dan satu waktu aktivitas.', 'warning');
+    if (!enumeratorGpsCaptured) return showNotice('GPS wajib diambil', 'Tekan Gunakan GPS dan izinkan akses lokasi perangkat sebelum mengirim data.', 'warning');
+
+    const photo = document.getElementById('enum_foto_lokasi').files[0];
+    const reader = new FileReader();
+    const button = document.getElementById('btnSubmitEnumerator');
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
+    reader.onload = () => {
+      const formData = {
+        organisasi_pelaksana: document.getElementById('enum_organisasi_pelaksana').value,
+        nama_hotspot: document.getElementById('enum_nama_hotspot').value,
+        kecamatan: document.getElementById('enum_kecamatan').value,
+        kelurahan: document.getElementById('enum_kelurahan').value,
+        alamat_lengkap: document.getElementById('enum_alamat_lengkap').value,
+        titik_koordinat: document.getElementById('enum_titik_koordinat').value,
+        foto_lokasi: photo.name,
+        fotoData: reader.result.split(',')[1], fotoName: photo.name, fotoMime: photo.type,
+        status_hotspot: document.getElementById('enum_status_hotspot').value,
+        populasi_kunci: populasi.join(' '),
+        tipe_lokasi: document.getElementById('enum_tipe_lokasi').value,
+        sub_tipe_lokasi: document.getElementById('enum_sub_tipe_lokasi').value,
+        tipe_lokasi_lainnya: document.getElementById('enum_tipe_lokasi_lainnya').value,
+        waktu_aktivitas: waktu.join(' '),
+        estimasi_jumlah_populasi: document.getElementById('enum_estimasi_jumlah_populasi').value,
+        jumlah_diedukasi: document.getElementById('enum_jumlah_diedukasi').value,
+        jumlah_tes_hiv: document.getElementById('enum_jumlah_tes_hiv').value,
+        jumlah_hiv_positif: document.getElementById('enum_jumlah_hiv_positif').value,
+        catatan_lapangan: (enumeratorCorrectionId ? '[Perbaikan dari ID ' + enumeratorCorrectionId + '] ' : '') + document.getElementById('enum_catatan_lapangan').value,
+        sumber_informasi: document.getElementById('enum_sumber_informasi').value,
+        no_hp_informan: document.getElementById('enum_no_hp_informan').value,
+        keterangan_aktivitas: document.getElementById('enum_keterangan_aktivitas').value,
+        kondisi_saat_pemetaan: document.getElementById('enum_kondisi_saat_pemetaan').value
+      };
+      google.script.run.withSuccessHandler(result => {
+        showNotice(result && result.success ? 'Data berhasil disimpan' : 'Data belum tersimpan', result ? result.message : 'Data selesai diproses.', result && result.success ? 'success' : 'warning');
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan';
+        if (result && result.success) { localStorage.removeItem(getEnumeratorDraftKey()); enumeratorModalObj.hide(); loadData(); }
+      }).withFailureHandler(error => {
+        handleSessionError(error);
+        button.disabled = false;
+        button.innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan Data Pemetaan';
+      }).submitEnumeratorForm(sessionToken, formData);
+    };
+    reader.readAsDataURL(photo);
+  }
+
+  function logout() {
+    const tokenToClear = sessionToken;
+    sessionToken = null;
+    currentUser = null;
+    sessionStorage.removeItem('dashboardSessionToken');
+    sessionStorage.removeItem('dashboardUser');
+    if (tokenToClear) google.script.run.logoutUser(tokenToClear);
+    if (map) { map.remove(); map = null; markersGroup = null; }
+    showLogin();
+  }
+
+  function initMap() {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+    if (map) {
+      map.invalidateSize();
+      return;
+    }
+    if (typeof L === 'undefined') {
+      mapElement.innerHTML = '<div class="alert alert-warning small mb-0">Peta tidak tersedia, tetapi data dashboard tetap dapat digunakan.</div>';
+      return;
+    }
+    try {
+      map = L.map(mapElement).setView([-7.9666, 112.6326], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      markersGroup = L.layerGroup().addTo(map);
+    } catch (error) {
+      map = null;
+      markersGroup = null;
+      mapElement.innerHTML = '<div class="alert alert-warning small mb-0">Peta tidak dapat dimuat, tetapi data dashboard tetap dapat digunakan.</div>';
+      console.error('Map initialization failed:', error);
+    }
+  }
+
+  function loadData() {
+    const requestId = ++dataLoadRequestId;
+    document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm me-2"></div>Memuat data...</td></tr>';
+    if (!window.google || !google.script || !google.script.run) {
+      reportRuntimeError(new Error('Google Apps Script bridge tidak tersedia. Buka URL Web App Apps Script, bukan file HTML lokal.'));
+      return;
+    }
+    const loadTimeout = setTimeout(() => {
+      if (requestId !== dataLoadRequestId) return;
+      document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-4"><div class="alert alert-warning mb-0">Data belum merespons dari server. <button type="button" class="btn btn-sm btn-warning ms-2" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi</button></div></td></tr>';
+    }, 15000);
+    google.script.run.withSuccessHandler(data => {
+      clearTimeout(loadTimeout);
+      renderDashboard(data);
+      if (!currentUser || String(currentUser.role || '').trim().toLowerCase() !== 'enumerator') loadRiskSummary();
+    }).withFailureHandler(error => {
+      clearTimeout(loadTimeout);
+      document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-4"><div class="alert alert-danger mb-0">Gagal memuat data. <button type="button" class="btn btn-sm btn-danger ms-2" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi</button></div></td></tr>';
+      handleSessionError(error);
+    }).getSheetData(sessionToken);
+  }
+
+  function loadRiskSummary() {
+    google.script.run.withSuccessHandler(renderRiskSummary).withFailureHandler(handleSessionError).getRiskSummary(sessionToken);
+  }
+
+  function deleteData(submissionId, hotspotName) {
+    if (!canDeleteData) return showNotice('Akses ditolak', 'Hanya Admin yang dapat menghapus data.', 'danger');
+    if (!confirm('Hapus data hotspot "' + hotspotName + '" secara permanen dari Kobo dan Google Sheet?')) return;
+    google.script.run.withSuccessHandler(result => {
+      showNotice(result && result.success ? 'Data berhasil dihapus' : 'Data belum dihapus', result ? result.message : 'Penghapusan data gagal.', result && result.success ? 'success' : 'danger');
+      if (result && result.success) loadData();
+    }).withFailureHandler(handleSessionError).deleteSubmission(sessionToken, submissionId);
+  }
+
+  function renderRiskSummary(result) {
+    if (!result || !result.success) return;
+    document.getElementById('risk-new').textContent = result.hotspotBaru;
+    document.getElementById('risk-inactive').textContent = result.hotspotTidakAktif;
+    document.getElementById('risk-duplicate').textContent = result.duplikasi;
+    document.getElementById('risk-incomplete').textContent = result.tidakLengkap;
+    document.getElementById('risk-late').textContent = result.terlambat;
+    document.getElementById('riskDeadlineLabel').textContent = 'Batas ' + result.batasKeterlambatanHari + ' hari';
+    const tableWrap = document.getElementById('riskTableWrap');
+    const tableBody = document.querySelector('#riskTable tbody');
+    if (!result.items || !result.items.length) {
+      tableWrap.hidden = true;
+      return;
+    }
+    tableBody.innerHTML = result.items.map(item => '<tr><td class="font-monospace">' + escapeHtml(item.id) + '</td><td>' + escapeHtml(item.namaHotspot) + '</td><td><span class="badge bg-warning text-dark">' + escapeHtml(item.risiko) + '</span></td><td>' + escapeHtml(item.detail) + '</td></tr>').join('');
+    tableWrap.hidden = false;
+  }
+
+  function handleSessionError(error) {
+    if (error && error.message && error.message.toLowerCase().includes('sesi')) {
+      showNotice('Sesi berakhir', error.message, 'warning');
+      logout();
+      return;
+    }
+    showNotice('Terjadi kesalahan', 'Error Server:\n' + (error ? error.message : 'Terjadi kesalahan.'), 'danger');
+  }
+
+  function reportRuntimeError(error) {
+    const message = error && error.message ? error.message : String(error || 'Kesalahan runtime tidak diketahui.');
+    console.error('Dashboard runtime error:', error);
+    const errorBox = document.getElementById('loginError');
+    if (errorBox && document.getElementById('loginView') && !document.getElementById('loginView').hidden) {
+      errorBox.textContent = message;
+      errorBox.hidden = false;
+      return;
+    }
+    showNotice('Dashboard gagal dimuat', message, 'danger');
+  }
+
+  function renderDashboard(data) {
+    if (!data || data.error) { showNotice('Data tidak dapat dimuat', 'Error Spreadsheet:\n' + (data ? data.error : 'Data kosong'), 'danger'); return; }
+
+    const submissionDateValue = row => row['_submission_time'] || row['submission_time'] || row['_date_created'] || row['start'] || row['today'] || '';
+    const submissionDateTimestamp = row => {
+      const timestamp = Date.parse(submissionDateValue(row));
+      return Number.isNaN(timestamp) ? -Infinity : timestamp;
+    };
+    const formatSubmissionDate = row => {
+      const rawDate = submissionDateValue(row);
+      const timestamp = Date.parse(rawDate);
+      return Number.isNaN(timestamp) ? rawDate || '-' : new Date(timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+    };
+    const sortedData = data.slice().sort((first, second) => submissionDateTimestamp(second) - submissionDateTimestamp(first));
+    const isEnumerator = String(currentUser && currentUser.role || '').trim().toLowerCase() === 'enumerator';
+    dataDetailRecords = {};
+    let tTotal = sortedData.length, tAktif = 0, tQcPending = 0, tTes = 0, tPositif = 0, kecCounts = {}, tbodyHtml = '';
+    if (markersGroup) markersGroup.clearLayers();
+
+    sortedData.forEach(row => {
+      let subId = row['_id'], nama = row['sec_b/nama_hotspot'] || 'Tanpa Nama', kec = row['sec_b/kecamatan'] || '-';
+      dataDetailRecords[String(subId)] = row;
+      let kel = row['sec_b/kelurahan'] || '', pop = row['sec_c/populasi_kunci'] || '-';
+      let statusFisik = String(row['sec_c/status_hotspot'] || '').toLowerCase();
+      let qcStatus = String(row['sec_e/qc_status_final'] || 'belum_divalidasi').trim().toLowerCase() || 'belum_divalidasi';
+      
+      // Hitung KPI (Mendukung teks 'aktif' & 'baru')
+      if (statusFisik === '1' || statusFisik === 'aktif' || statusFisik === '2' || statusFisik === 'baru') tAktif++;
+      if (!qcStatus || qcStatus === 'belum_divalidasi' || qcStatus === 'perlu_tindak_lanjut') tQcPending++;
+      tTes += parseInt(row['sec_c/jumlah_tes_hiv'] || 0); tPositif += parseInt(row['sec_c/jumlah_hiv_positif'] || 0);
+      
+      let kecLabel = humanize(kec);
+      kecCounts[kecLabel] = (kecCounts[kecLabel] || 0) + 1;
+
+      // Peta
+      let gps = row['sec_b/titik_koordinat'] || row['_geolocation'];
+      if (gps && markersGroup && typeof L !== 'undefined') {
+        let pts = gps.replace('[','').replace(']','').split(/[\s,]+/);
+        if(pts.length>=2) L.marker([parseFloat(pts[0]), parseFloat(pts[1])]).addTo(markersGroup).bindPopup('<b>' + escapeHtml(nama) + '</b><br><small>' + escapeHtml(kecLabel) + '</small>');
+      }
+
+      let qcDataStr = encodeURIComponent(JSON.stringify({ kelengkapan: row['sec_e/qc_kelengkapan']||'', duplikasi: row['sec_e/qc_duplikasi']||'', kroscek: row['sec_e/qc_kroscek']||'', catatan: row['sec_e/qc_catatan_analis']||'', pemeriksa: row['sec_e/qc_nama_pemeriksa']||'' }));
+      let qcNote = String(row['sec_e/qc_catatan_analis'] || '').trim();
+      let followUpLabel = qcStatus === 'tidak_valid' ? 'Tindak lanjut: ' : 'Catatan: ';
+      let followUp = qcStatus === 'tidak_valid' || qcStatus === 'perlu_tindak_lanjut'
+        ? (followUpLabel + (qcNote || 'Periksa catatan QC dan lakukan perbaikan/tindak lanjut.'))
+        : qcStatus === 'valid' ? 'Data sudah valid.' : 'Menunggu pemeriksaan QC.';
+      let actions = [];
+      if (isEnumerator && (qcStatus === 'tidak_valid' || qcStatus === 'perlu_tindak_lanjut')) actions.push('<button class="btn btn-sm btn-outline-warning me-1" onclick=\'openEnumeratorCorrection(' + escapeHtml(JSON.stringify(subId)) + ')\'><i class="bi bi-pencil-square me-1"></i>Perbaiki Data</button>');
+      if (canReviewData) actions.push('<button class="btn btn-sm btn-outline-secondary me-1" onclick=\'openDataDetail(' + escapeHtml(JSON.stringify(subId)) + ')\'><i class="bi bi-eye me-1"></i>Detail</button>');
+      if (canEditQC) actions.push('<button class="btn btn-sm btn-outline-primary" onclick=\'openQC(' + escapeHtml(JSON.stringify(subId)) + ', ' + escapeHtml(JSON.stringify(nama)) + ', ' + escapeHtml(JSON.stringify(qcStatus)) + ', ' + escapeHtml(JSON.stringify(qcDataStr)) + ')\'><i class="bi bi-shield-check me-1"></i>QC Analis</button>');
+      let qcAction = actions.length ? actions.join(' ') : '<span class="badge bg-light text-secondary border"><i class="bi bi-eye me-1"></i>Lihat Saja</span>';
+      let adminAction = canDeleteData ? '<button class="btn btn-sm btn-outline-danger" onclick=\'deleteData(' + escapeHtml(JSON.stringify(subId)) + ', ' + escapeHtml(JSON.stringify(nama)) + ')\'><i class="bi bi-trash3 me-1"></i>Hapus</button>' : '';
+
+      tbodyHtml += '<tr>' +
+        '<td class="text-center font-monospace text-secondary">' + escapeHtml(subId) + '</td><td class="text-nowrap">' + escapeHtml(formatSubmissionDate(row)) + '</td><td class="fw-bold">' + escapeHtml(nama) + '</td>' +
+        '<td>' + escapeHtml(kecLabel) + ' <small class="text-muted d-block">' + escapeHtml(humanize(kel)) + '</small></td>' +
+        '<td class="text-center"><span class="badge bg-secondary">' + escapeHtml(humanize(pop)) + '</span></td>' +
+        '<td class="text-center">' + formatStatusFisik(statusFisik) + '</td>' +
+        '<td class="text-center qc-column">' + formatStatusQC(qcStatus) + '</td>' +
+        '<td class="qc-feedback-column">' + (qcStatus === 'tidak_valid' || qcStatus === 'perlu_tindak_lanjut' ? '<strong>' + escapeHtml(followUpLabel) + '</strong>' : '') + escapeHtml(followUp.replace(followUpLabel, '')).replace(/\n/g, '<br>') + '</td>' +
+        '<td class="text-center qc-action-column">' + qcAction + '</td>' +
+        '<td class="text-center admin-column">' + adminAction + '</td>' +
+      '</tr>';
+    });
+
+    document.getElementById('kpi-total').innerText = tTotal; document.getElementById('kpi-aktif').innerText = tAktif;
+    document.getElementById('kpi-qc').innerText = tQcPending; document.getElementById('kpi-hiv').innerHTML = tPositif + ' <small class="fs-5 text-muted">/ ' + tTes + ' Tes</small>';
+    document.querySelector('#dataTable tbody').innerHTML = tbodyHtml || '<tr><td colspan="10" class="text-center py-4">Data tidak ditemukan.</td></tr>';
+
+    const chartCanvas = document.getElementById('chartKecamatan');
+    if (chartCanvas && typeof Chart !== 'undefined') {
+      const ctx = chartCanvas.getContext('2d');
+      if (chartKec) chartKec.destroy();
+      chartKec = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(kecCounts), datasets: [{ data: Object.values(kecCounts), backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#0dcaf0', '#6c7576'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+    }
+  }
+
+  function formatStatusFisik(code) {
+    if (code === 'aktif' || code === '1') return '<span class="badge bg-success badge-status">Aktif</span>';
+    if (code === 'baru' || code === '2') return '<span class="badge bg-info text-dark badge-status">Baru</span>';
+    if (code === 'tidak_aktif' || code === '3') return '<span class="badge bg-danger badge-status">Tidak Aktif</span>';
+    if (code === 'lama' || code === '5') return '<span class="badge bg-primary badge-status">Lama</span>';
+    return '<span class="badge bg-secondary badge-status">Perlu Klarifikasi</span>';
+  }
+
+  function formatStatusQC(code) {
+    if (code === 'valid') return '<span class="badge bg-success badge-status"><i class="bi bi-check-circle me-1"></i>Valid</span>';
+    if (code === 'tidak_valid') return '<span class="badge bg-danger badge-status"><i class="bi bi-x-circle me-1"></i>Ditolak</span>';
+    if (code === 'perlu_tindak_lanjut') return '<span class="badge bg-warning text-dark badge-status">Cek Ulang (Pending)</span>';
+    return '<span class="badge bg-light text-dark border badge-status">Belum Diperiksa</span>';
+  }
+
+  function openDataDetail(submissionId) {
+    const row = dataDetailRecords[String(submissionId)];
+    if (!row) return showNotice('Detail tidak tersedia', 'Data ini tidak ditemukan pada daftar saat ini.', 'warning');
+    const labels = {
+      '_id': 'ID Data', '_submission_time': 'Tanggal Pengiriman', 'sec_a/nama_enumerator': 'Nama Enumerator',
+      'sec_a/organisasi_pelaksana': 'Organisasi Pelaksana', 'sec_b/nama_hotspot': 'Nama Hotspot',
+      'sec_b/kecamatan': 'Kecamatan', 'sec_b/kelurahan': 'Kelurahan', 'sec_b/alamat_lengkap': 'Alamat Lengkap',
+      'sec_b/titik_koordinat': 'Titik Koordinat GPS', 'sec_c/status_hotspot': 'Status Hotspot',
+      'sec_c/populasi_kunci': 'Populasi Kunci', 'sec_c/tipe_lokasi': 'Tipe Lokasi',
+      'sec_c/sub_tipe_lokasi': 'Sub-Tipe Lokasi', 'sec_c/waktu_aktivitas': 'Waktu Aktivitas',
+      'sec_c/Estimasi_Jumlah_Populasi_Kunci': 'Estimasi Jumlah Populasi', 'sec_c/jumlah_diedukasi': 'Jumlah Diedukasi',
+      'sec_c/jumlah_tes_hiv': 'Jumlah Tes HIV', 'sec_c/jumlah_hiv_positif': 'Jumlah HIV Positif',
+      'sec_d/sumber_informasi': 'Sumber Informasi', 'sec_d/no_hp_informan': 'No. HP Informan',
+      'sec_d/keterangan_aktivitas': 'Keterangan Aktivitas', 'sec_d/kondisi_saat_pemetaan': 'Kondisi Saat Pemetaan',
+      'sec_e/qc_status_final': 'Status QC', 'sec_e/qc_catatan_analis': 'Catatan QC', 'sec_f/dokumentasi_persetujuan_url': 'Dokumen Persetujuan QC'
+    };
+    const humanizedDetailKeys = new Set([
+      'sec_a/nama_enumerator', 'sec_a/organisasi_pelaksana', 'sec_b/kecamatan', 'sec_b/kelurahan',
+      'sec_c/status_hotspot', 'sec_c/populasi_kunci', 'sec_c/tipe_lokasi', 'sec_c/sub_tipe_lokasi',
+      'sec_c/waktu_aktivitas', 'sec_d/sumber_informasi', 'sec_e/qc_status_final'
+    ]);
+    const rows = Object.keys(labels).filter(key => row[key] !== undefined && row[key] !== '').map(key => {
+      const value = humanizedDetailKeys.has(key) ? humanize(row[key]) : String(row[key]);
+      return '<tr><th style="width: 34%;" class="bg-light">' + labels[key] + '</th><td>' + escapeHtml(value).replace(/\n/g, '<br>') + '</td></tr>';
+    }).join('');
+    const attachmentUrl = row['sec_b/foto_lokasi_url'] || row['foto_lokasi_url'] || '';
+    const approvalUrl = row['sec_f/dokumentasi_persetujuan_url'] || '';
+    const attachmentMarkup = (attachmentUrl ? getDocumentationPreview(attachmentUrl, 'Preview Dokumentasi Lokasi', 'Buka dokumentasi lokasi') : '') + (approvalUrl ? getDocumentationPreview(approvalUrl, 'Preview Dokumen Persetujuan QC', 'Buka dokumen persetujuan') : '');
+    document.getElementById('dataDetailBody').innerHTML = '<div class="eyebrow mb-2">Pemeriksaan Sebelum Validasi</div><div class="table-responsive"><table class="table table-bordered align-middle mb-0"><tbody>' + rows + '</tbody></table></div>' + attachmentMarkup;
+    dataDetailModalObj.show();
+  }
+
+  function openQC(subId, nama, currentStatus, rawQcData) {
+    document.getElementById('formQC').reset();
+    document.getElementById('btnSaveQC').innerHTML = '<i class="bi bi-cloud-upload me-2"></i>Simpan ke Kobo';
+    document.getElementById('btnSaveQC').disabled = false;
+    document.getElementById('qc_submission_id').value = subId; document.getElementById('qc_nama_hotspot').value = nama;
+    if (currentStatus && currentStatus !== 'belum_divalidasi') document.getElementById('qc_status_final').value = currentStatus;
+    try {
+      let hist = JSON.parse(decodeURIComponent(rawQcData));
+      if (hist.kelengkapan) document.getElementById('qc_kelengkapan').value = hist.kelengkapan;
+      if (hist.duplikasi) document.getElementById('qc_duplikasi').value = hist.duplikasi;
+      if (hist.kroscek) document.getElementById('qc_kroscek').value = hist.kroscek;
+      if (hist.catatan) document.getElementById('qc_catatan_analis').value = hist.catatan;
+    } catch(e) {}
+    document.getElementById('qc_nama_pemeriksa').value = currentUser ? currentUser.name : '';
+    document.getElementById('qc_tanggal_pemeriksaan').value = new Date().toISOString().slice(0, 10);
+    qcModalObj.show();
+  }
+
+  function submitQCForm() {
+    if (!canEditQC) return showNotice('Akses ditolak', 'Role Anda tidak memiliki izin untuk melakukan QC.', 'danger');
+    if (!document.getElementById('formQC').reportValidity()) return;
+    let payload = { statusFinal: document.getElementById('qc_status_final').value, kelengkapan: document.getElementById('qc_kelengkapan').value, duplikasi: document.getElementById('qc_duplikasi').value, kroscek: document.getElementById('qc_kroscek').value, catatanAnalis: document.getElementById('qc_catatan_analis').value, namaPemeriksa: document.getElementById('qc_nama_pemeriksa').value };
+    if (!payload.statusFinal) return showNotice('Data belum lengkap', 'Pilih Keputusan Final QC.', 'warning');
+    if (!payload.namaPemeriksa) return showNotice('Data belum lengkap', 'Masukkan Nama Anda.', 'warning');
+
+    let btn = document.getElementById('btnSaveQC'); btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...'; btn.disabled = true;
+    const send = documentData => {
+      if (documentData) {
+        payload.dokumenPersetujuanData = documentData.data;
+        payload.dokumenPersetujuanName = documentData.name;
+        payload.dokumenPersetujuanMime = documentData.mime;
+      }
+      google.script.run.withSuccessHandler(res => {
+        if (!res || !res.success) {
+          showNotice('QC belum tersimpan', res ? res.message : 'Gagal menyimpan QC.', 'danger');
+          btn.innerHTML = 'Coba Lagi';
+          btn.disabled = false;
+          return;
+        }
+        qcModalObj.hide();
+        showNotice('QC berhasil disimpan', res.message, 'success');
+        loadData();
+      }).withFailureHandler(error => {
+        handleSessionError(error);
+        btn.innerHTML = 'Coba Lagi';
+        btn.disabled = false;
+      }).saveQCValidation(sessionToken, document.getElementById('qc_submission_id').value, payload);
+    };
+    const documentFile = document.getElementById('qc_dokumen_persetujuan').files[0];
+    if (!documentFile) return send(null);
+    const reader = new FileReader();
+    reader.onload = () => send({ data: reader.result.split(',')[1], name: documentFile.name, mime: documentFile.type });
+    reader.onerror = () => {
+      showNotice('Dokumen gagal dibaca', 'Pilih dokumen persetujuan lain.', 'warning');
+      btn.innerHTML = 'Coba Lagi';
+      btn.disabled = false;
+    };
+    reader.readAsDataURL(documentFile);
+  }
+
+  function filterTable() { let input = document.getElementById("searchInput").value.toLowerCase(); document.querySelectorAll("#dataTable tbody tr").forEach(row => { row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none"; }); }
+  function showNotice(title, message, type = 'info') {
+    const iconByType = { info: 'bi-info-circle-fill', success: 'bi-check-circle-fill', warning: 'bi-exclamation-triangle-fill', danger: 'bi-x-circle-fill' };
+    const notice = document.getElementById('noticeModal');
+    const noticeIcon = document.getElementById('noticeIcon');
+    noticeIcon.className = 'notice-icon notice-' + (iconByType[type] ? type : 'info');
+    noticeIcon.innerHTML = '<i class="bi ' + (iconByType[type] || iconByType.info) + '"></i>';
+    document.getElementById('noticeTitle').textContent = title || 'Pemberitahuan';
+    document.getElementById('noticeMessage').textContent = message || '';
+    const actionButton = document.getElementById('noticeActionButton');
+    actionButton.textContent = 'Mengerti';
+    actionButton.onclick = hideNotice;
+    notice.classList.add('show');
+  }
+
+  function hideNotice() {
+    const notice = document.getElementById('noticeModal');
+    if (notice) notice.classList.remove('show');
+  }
+  function humanize(value) {
+    return String(value || '')
+      .replace(/_+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\b\w/g, character => character.toUpperCase());
+  }
+  function escapeHtml(text) { return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;").replace(/"/g, "&quot;"); }
+</script>
+</body>
+</html>

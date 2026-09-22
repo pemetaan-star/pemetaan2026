@@ -1,4 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Wrapper Next.js untuk Dashboard Pemetaan Hotspot Malang 2026. Backend dan UI
+Apps Script tetap berada di folder induk pada `Index.html` dan `code.gs`.
+
+## Konfigurasi
+
+Buat `next-app/.env.local`:
+
+```env
+NEXT_PUBLIC_GAS_WEB_APP_URL=https://script.google.com/macros/s/DEPLOYMENT_ID/exec
+```
+
+Isi URL tersebut dengan URL Web App Apps Script yang sudah dideploy, lalu jalankan:
+
+```bash
+npm run dev
+```
+
+Buka `http://localhost:3000`. Dashboard dimuat di dalam iframe sehingga
+`google.script.run`, GPS, upload file, dan alur autentikasi tetap ditangani
+oleh Web App Apps Script.
 
 ## Getting Started
 

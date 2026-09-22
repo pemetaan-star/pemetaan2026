@@ -1,0 +1,728 @@
+DISUSUN OLEH 
+YAYASAN LINGK AR GAGASAN INDONESIA
+Tanggal : 22 Juli 2026
+Proposal Teknis
+pphiv@linggaindonesia.com
+Pemetaan Hotspot Populasi
+Kunci Kota Malang
+Kata Pengantar
+i
+Puji syukur ke hadirat Tuhan Yang Maha Esa atas segala rahmat
+dan karunia-Nya sehingga Proposal Teknis Pemetaan Hotspot
+Populasi Kunci Kota Malang Tahun 2026 ini dapat disusun dengan
+baik.
+Proposal ini disusun sebagai pedoman pelaksanaan kegiatan
+pemetaan hotspot populasi kunci di Kota Malang dalam rangka
+mendukung upaya penguatan program pencegahan dan
+pengendalian HIV yang berbasis data, bukti, dan kebutuhan
+lapangan. Melalui pendekatan kolaboratif yang melibatkan
+organisasi komunitas serta pemangku kepentingan terkait,
+kegiatan ini diharapkan dapat menghasilkan informasi yang
+akurat mengenai persebaran hotspot sebagai dasar perencanaan
+intervensi yang lebih efektif dan tepat sasaran.
+Kami menyampaikan apresiasi dan terima kasih kepada Dinas
+Kesehatan Kota Malang, seluruh organisasi komunitas, serta
+berbagai pihak yang telah memberikan masukan dan dukungan
+dalam penyusunan proposal ini. Besar harapan kami agar kegiatan
+ini dapat terlaksana dengan baik dan memberikan kontribusi
+nyata dalam mendukung penguatan respons HIV di Kota Malang.
+Malang, 22 Juli 2026
+Yayasan Lingkar Gagasan Indonesia
+Daftar isi
+Pendahuluan1
+Pendekatan Pelaksanaan4
+Metodologi Pelaksanaan6
+Tahapan Pelaksanaan9
+Organisasi dan Tim Pelkasana11
+Definisi Operasional dan Instrumen Pemetaan13
+Instrumen dan Hasil Kegiatan Pemetaan15
+Jadwal Pelaksanaan17
+Manajemen Mutu dan Manajemen Resiko19
+Penutup21
+ii
+Cover
+Kata Pengantar
+Daftar Isiii
+i
+Lampiran - lampiran
+BAB I 
+PENDAHULUAN
+1
+Pemetaan hotspot populasi kunci merupakan salah satu langkah
+strategis dalam mendukung upaya pencegahan dan pengendalian
+HIV yang berbasis data dan bukti. Informasi mengenai lokasi,
+karakteristik, dan dinamika hotspot menjadi dasar penting dalam
+perencanaan, pelaksanaan, monitoring, serta evaluasi program
+yang lebih efektif dan tepat sasaran.
+Perkembangan situasi dan dinamika populasi kunci di Kota
+Malang memerlukan adanya pembaruan data hotspot secara
+berkala. Selain untuk memperoleh gambaran terkini mengenai
+persebaran hotspot, kegiatan pemetaan juga bertujuan
+mengidentifikasi perubahan lokasi, munculnya hotspot baru, serta
+kondisi hotspot yang sudah tidak aktif. Hasil pemetaan
+diharapkan dapat menjadi sumber informasi yang valid bagi Dinas
+Kesehatan Kota Malang dan para pemangku kepentingan dalam
+mendukung pengambilan keputusan program.
+Sebagai bagian dari pelaksanaan Swakelola Tipe III Pemetaan
+Hotspot Populasi Kunci Tahun 2026, Dinas Kesehatan Kota
+Malang telah melaksanakan proses seleksi Organisasi
+Masyarakat Sipil (OMS) sebagai mitra pelaksana kegiatan.
+Berdasarkan hasil seleksi tersebut, Yayasan Lingkar Gagasan
+Indonesia ditetapkan sebagai organisasi pelaksana yang
+bertanggung jawab dalam pelaksanaan kegiatan pemetaan
+hotspot populasi kunci di Kota Malang.
+Melalui pendekatan berbasis komunitas, kegiatan ini akan
+melibatkan organisasi dan jejaring komunitas yang memiliki
+pengalaman serta akses terhadap populasi kunci, sehingga
+proses identifikasi, verifikasi, dan validasi hotspot dapat
+dilakukan secara lebih akurat, partisipatif, dan sesuai dengan
+kondisi lapangan.
+1.1 Latar belakang
+2
+Kegiatan Pemetaan Hotspot Populasi Kunci Kota Malang Tahun
+2026 dilaksanakan berdasarkan : 
+1. Undangan Tim Seleksi Pelaksanaan Swakelola Tipe III Pemetaan
+Hotspot Nomor 400.7.8.2/2209/35.73.402/2026 tanggal 05 Juni
+2026 yang diterbitkan oleh Dinas Kesehatan Kota Malang.
+2. Pengumuman Hasil Seleksi Swakelola Tipe III Pemetaan Hotspot
+tanggal 06 Juli 2026 yang diterbitkan oleh Dinas Kesehatan
+Kota Malang, yang menetapkan Yayasan Lingkar Gagasan
+Indonesia sebagai Organisasi Masyarakat Sipil (OMS) pelaksana
+kegiatan Pemetaan Hotspot Populasi Kunci Kota Malang Tahun
+2026.
+3. Hasil koordinasi dan audiensi antara Dinas Kesehatan Kota
+Malang dengan Yayasan Lingkar Gagasan Indonesia terkait
+persiapan pelaksanaan kegiatan Pemetaan Hotspot Populasi
+Kunci Kota Malang Tahun 2026.
+4. Kebutuhan data dan informasi terkini mengenai hotspot
+populasi kunci sebagai dasar perencanaan dan penguatan
+program pencegahan dan pengendalian HIV di Kota Malang.
+1.2 Dasar pelaksanaan
+1.3 Tujuan
+Tujuan kegiatan Pemetaan Hotspot Populasi Kunci Kota Malang
+Tahun 2026 adalah:
+1. Memperbarui data hotspot populasi kunci di Kota Malang.
+2. Mengidentifikasi hotspot aktif, hotspot baru, dan perubahan
+hotspot yang terjadi di lapangan.
+3. Menghasilkan database hotspot yang akurat, terverifikasi, dan
+terdokumentasi dengan baik.
+4. Menyusun peta persebaran hotspot sebagai bahan analisis dan
+perencanaan program.
+5. Mendukung Dinas Kesehatan Kota Malang dalam pengambilan
+keputusan program pencegahan dan pengendalian HIV yang
+berbasis data.
+3
+Manfaat kegiatan Pemetaan Hotspot Populasi Kunci Kota Malang
+Tahun 2026 adalah:
+1. Tersedianya data hotspot populasi kunci yang akurat dan
+terverifikasi.
+2. Tersedianya informasi spasial mengenai persebaran hotspot di
+wilayah Kota Malang.
+3. Mendukung perencanaan program, penentuan prioritas wilayah,
+dan pengalokasian sumber daya yang lebih tepat sasaran.
+4. Meningkatkan koordinasi dan kolaborasi antara Dinas
+Kesehatan Kota Malang, organisasi masyarakat sipil, dan
+komunitas dalam mendukung respons HIV.
+5. Menjadi dasar pengembangan strategi intervensi yang lebih
+efektif sesuai dengan kondisi lapangan.
+1.4 Manfaat
+Source : Bagian Pemerintahan Kota Malang
+BAB I I
+PENDEKATAN PELAKSANAAN
+4
+Pelaksanaan Pemetaan Hotspot Populasi Kunci Kota Malang
+Tahun 2026 menggunakan pendekatan berbasis komunitas
+(community-based approach) dengan mengedepankan prinsip
+partisipatif, kolaboratif, akurat, dan akuntabel. Pendekatan ini
+dipilih karena organisasi masyarakat sipil dan komunitas memiliki
+pengetahuan, pengalaman, serta akses yang lebih baik terhadap
+dinamika populasi kunci di lapangan.
+Yayasan Lingkar Gagasan Indonesia sebagai pelaksana kegiatan
+akan mengkoordinasikan seluruh tahapan pelaksanaan bersama
+organisasi komunitas yang memiliki mandat pada masing-masing
+populasi kunci, sehingga proses pemetaan dapat dilaksanakan
+secara terintegrasi, menghindari duplikasi data, dan
+menghasilkan basis data hotspot yang valid. Seluruh proses
+pelaksanaan akan mengacu pada standar operasional yang telah
+disepakati bersama Dinas Kesehatan Kota Malang, mulai dari
+persiapan, pengumpulan data, supervisi, validasi, analisis, hingga
+penyusunan laporan akhir.
+2.1 Kerangka Pelaksanaan
+2.2 Prinsip Pelaksanaan
+Pelaksanaan kegiatan mengacu pada prinsip-prinsip sebagai
+berikut:
+1. Partisipatif, dengan melibatkan organisasi komunitas dan
+pemangku kepentingan sesuai peran dan tanggung jawabnya.
+2. Kolaboratif, melalui koordinasi aktif antara Dinas Kesehatan
+Kota Malang, Yayasan Lingkar Gagasan Indonesia, dan
+organisasi sipil lainnya.
+3. Berbasis Data, seluruh hasil pemetaan didasarkan pada temuan
+lapangan yang dapat diverifikasi.
+4. Akuntabel, seluruh proses dan hasil kegiatan terdokumentasi
+dengan baik serta dapat dipertanggungjawabkan.
+5. Kerahasiaan Data, menjaga kerahasiaan informasi sesuai
+dengan etika pelaksanaan kegiatan dan ketentuan
+perlindungan data.
+5
+Untuk memastikan kegiatan berjalan efektif, strategi pelaksanaan
+yang digunakan meliputi:
+1. Melaksanakan Kick Off Meeting dan pelatihan bagi seluruh tim
+pelaksana sebagai penyamaan persepsi mengenai metodologi,
+definisi operasional, instrumen, etika pelaksanaan, serta
+mekanisme pelaporan.
+2. Melaksanakan pemetaan hotspot melalui pengumpulan data
+lapangan menggunakan instrumen yang telah disepakati.
+3. Melaksanakan supervisi lapangan untuk menjamin kualitas
+pelaksanaan dan memastikan kesesuaian metode pengumpulan
+data.
+4. Melakukan verifikasi, validasi, dan analisis data sebagai dasar
+penyusunan database serta peta hotspot.
+5. Menyusun laporan teknis dan menyampaikan hasil kegiatan
+kepada Dinas Kesehatan Kota Malang melalui forum diseminasi.
+2.3 Strategi Pelaksanaan
+2.4 Mekanisme Pelaksanaan 
+Pelaksanaan kegiatan menerapkan mekanisme koordinasi
+berjenjang sebagai berikut:
+Dinas Kesehatan Kota Malang →  PPTK (Pejabat Pelaksana Teknis
+Kegiatan ) →  Yayasan Lingkar Gagasan Indonesia →  Tim Pelaksana
+yang terdiri: 
+1. Koordinator Kegiatan;
+2. Administrasi;
+3. Data Analis, dan 
+4. Enumerator.
+Koordinasi dilakukan secara berkala pada setiap tahapan kegiatan
+untuk memastikan pelaksanaan berjalan sesuai jadwal, menjaga
+kualitas hasil pemetaan, serta menyelesaikan kendala yang muncul
+selama proses pelaksanaan.
+BAB III
+METODOLOGI PELAKSANAAN
+6
+Pelaksanaan Pemetaan Hotspot Populasi Kunci Kota Malang
+Tahun 2026 menggunakan metode pemetaan lapangan (field
+mapping) dengan pendekatan berbasis komunitas. Pengumpulan
+data dilakukan melalui identifikasi langsung pada lokasi hotspot,
+observasi lapangan, wawancara informan kunci, serta verifikasi
+terhadap informasi yang diperoleh untuk menghasilkan data yang
+akurat dan mutakhir.
+Metode ini mengutamakan keterlibatan organisasi masyarakat
+sipil penjangkau dan pendamping komunitas serta yang memiliki
+pengalaman serta akses terhadap populasi kunci, sehingga
+proses identifikasi hotspot dapat dilaksanakan secara efektif
+sesuai dengan kondisi lapangan.
+3.1 Pengumpulan Data
+3.2 Tahapan Pengumpulan Data
+Pengumpulan data dilaksanakan melalui
+tahapan sebagai berikut:
+1. Identifikasi awal hotspot berdasarkan
+informasi organisasi komunitas dan
+data pendukung yang tersedia.
+2. Verifikasi keberadaan hotspot melalui
+observasi dan konfirmasi lapangan
+(pemetaan lapangan).
+3. Pengumpulan data menggunakan
+instrumen pemetaan yang telah
+disediakan.
+4. Pendokumentasian lokasi dan
+informasi pendukung setiap hotspot.
+5. Penyampaian hasil pengumpulan data
+pada Data Analis untuk dilakukan
+proses validasi dan pengolahan data.
+Identifikasi
+Berdasarkan informasi
+organisasi komunitas
+1
+2
+3
+4
+Verifikasi dan pemetaan
+Melalui pemetaan
+lapangan oleh
+enumerator
+Pengumpulan data
+Akuisisi data lapangan
+Pendokumentasian
+Dapat dilakukan mapping
+data entry
+5
+Validasi dan analisis
+Proses validasi data
+untuk dianalisis
+7
+Verifikasi dan validasi dilakukan untuk memastikan kualitas data
+hasil pemetaan sebelum dilakukan analisis. Proses ini meliputi:
+1. Pemeriksaan kelengkapan data.
+2. Pemeriksaan konsistensi pengisian instrumen.
+3. Identifikasi data ganda (duplikasi hotspot).
+4. Validasi lokasi hotspot berdasarkan hasil pemetaan lapangan
+(dengan supervisi) maupun kroscek silang.
+5. Finalisasi database hotspot.
+3.3 Verifikasi dan Validasi Data Pengolahan 
+3.4 Pengolahan dan Analisis Data
+Data yang telah dinyatakan valid selanjutnya dilakukan proses
+pengolahan dan analisis untuk menghasilkan informasi yang dapat
+digunakan sebagai dasar penyusunan hasil pemetaan. Pengolahan
+data meliputi:
+1. Data cleaning.
+2. Pengkodean data.
+3. Rekapitulasi data.
+4. Analisis deskriptif.
+5. Penyusunan database akhir.
+3.5 Pengolahan Data Spasial Geographic Information System (GIS) 
+Data lokasi hotspot yang telah divalidasi diolah menggunakan
+Sistem Informasi Geografis (Geographic Information System/GIS)
+untuk menghasilkan visualisasi persebaran hotspot di wilayah Kota
+Malang. Keluaran pengolahan data spasial meliputi:
+1. Database hotspot sebaran populasi kunci.
+2. Peta persebaran hotspot berdasarkan wilayah administrasi.
+3. Peta tematik hasil pemetaan hotspot.
+8
+Hotspot yang digunakan sebagai acuan awal dalam pemetaan ini
+bersumber dari data program penjangkauan dan penanggulangan
+HIV pada populasi kunci di SSR Lingkar Gagasan Indonesia
+(komunitas PSP), SSR Fatayat NU Jawa Timur yang bekerjasama
+dengan IGAMA (komunitas LSL), Wamarapa (komunitas
+Transgender) dan Penasun, serta Yayasan Sadar Hati yang
+menjangkau komunitas Penasun dan pengguna methamphetamine
+pada populasi kunci . Estimasi hotspot dari masing-masing populasi
+kunci berjumlah sebagai berikut dan dapat  saat pemetaan
+lapangan berdasarkan asesmen: 
+3.6 Estimasi Hotspot
+Nama Lembaga
+Pendamping
+Jenis Populasi
+Kunci
+Estimasi Jumlah
+Hotspot
+Yayasan Lingkar
+Gagasan Indonesia PLSL/TL 55
+Yayasan Igama LSL 30
+Wamarapa Transgender 6
+SSR Fatayat NU
+Jawa TImur Penasun 9
+BAB IV
+TAHAPAN PELAKSANAAN
+9
+Tahap persiapan merupakan tahap awal pelaksanaan
+kegiatan yang bertujuan memastikan kesiapan administrasi,
+teknis, dan sumber daya pelaksana. Kegiatan pada tahap ini
+meliputi koordinasi dengan Dinas Kesehatan Kota Malang,
+penyusunan rencana kerja, penyiapan instrumen pemetaan,
+pembentukan tim pelaksana, serta penyusunan kebutuhan
+operasional kegiatan.
+Persiapan kegiatan
+4.1
+Tahap ini dilakukan sebagai proses penyamaan persepsi dan
+peningkatan kapasitas seluruh tim pelaksana yang terdiri
+dari Koordinator Kegiatan, Administrasi, Data Analis, dan
+Enumerator. Materi pelatihan meliputi tujuan kegiatan,
+metodologi pemetaan, definisi operasional hotspot,
+penggunaan instrumen, mekanisme pengumpulan data, etika
+pelaksanaan, serta sistem pelaporan kegiatan.
+Kick off meeting dan pelatihan tim pelaksana
+4.2
+Tahap pemetaan dilakukan melalui kegiatan pengumpulan
+data lapangan pada lokasi hotspot populasi kunci di wilayah
+Kota Malang. Enumerator melakukan identifikasi,
+pencatatan, dan verifikasi informasi hotspot berdasarkan
+instrumen yang telah disiapkan dengan dukungan koordinasi
+komunitas terkait.
+Pelaksanaan Pemetaan
+4.3
+Supervisi dilakukan untuk memastikan proses pemetaan
+berjalan sesuai metodologi dan standar kualitas yang telah
+ditetapkan. Kegiatan supervisi meliputi pemantauan
+pelaksanaan lapangan, pengecekan kelengkapan instrumen,
+validasi informasi, serta penyelesaian kendala yang
+ditemukan selama proses pemetaan.
+Supervisi dan Pengendalian Kualitas Data
+4.4
+Tahap akhir kegiatan dilakukan melalui penyampaian hasil
+pemetaan kepada Dinas Kesehatan Kota Malang. Kegiatan
+diseminasi bertujuan menyampaikan hasil, mendapatkan
+masukan, serta memastikan hasil pemetaan dapat dimanfaatkan
+sebagai dasar penguatan program pencegahan dan pengendalian
+HIV di Kota Malang.
+10
+Tahap pengolahan dan analisis dilakukan setelah proses
+pengumpulan data selesai. Data hasil pemetaan akan melalui
+proses pemeriksaan, pembersihan data, validasi, pengolahan
+database, analisis informasi, serta penyusunan data spasial
+menggunakan GIS untuk menghasilkan informasi persebaran
+hotspot.
+ Pengolahan dan Analisis Data4.5
+Tahap penyusunan laporan dilakukan untuk mendokumentasikan
+seluruh proses dan hasil pelaksanaan kegiatan. Laporan memuat
+proses pelaksanaan, hasil pemetaan, analisis data, peta hotspot,
+dokumentasi kegiatan, serta rekomendasi hasil kegiatan.
+Penyusunan Laporan4.6
+Diseminasi Hasil dan Penyerahan Laporan Akhir4.7
+BAB V
+ORGANISASI dan TIM PELAKSANA
+11
+Pelaksanaan kegiatan Pemetaan Hotspot Populasi Kunci Kota
+Malang Tahun 2026 dilaksanakan melalui koordinasi berjenjang
+antara Dinas Kesehatan Kota Malang sebagai pemberi mandat,
+Yayasan Lingkar Gagasan Indonesia sebagai pelaksana kegiatan,
+serta tim pelaksana teknis yang terdiri dari Koordinator Kegiatan,
+Administrasi, Data Analis, dan Enumerator. Struktur pelaksanaan
+kegiatan sebagai berikut:
+5.1 Struktur Organisasi Pelaksana
+Surat Kontrak / Perjanjian kerjasama
+Surat Keputusan Tim Pelaksana dan
+ Rekomendasi Dinas Kesehatan Kota Malang
+DINAS KESEHATAN KOTA MALANG
+PEJABAT PELAKSANA TEKNIS KEGIATAN
+YAYASAN LINGKAR GAGASAN INDONESIA
+TIM PELKASANA KEGIATAN
+Yang terdiri dari
+Koordinator Pemetaan
+Administrasi
+Data Analis
+Enumerator
+5.2 Pembagian Tugas Tim Pelaksana
+5.2 .1. Koordinator Pemetaan
+1. Melakukan koordinasi dengan Dinas Kesehatan Kota Malang.
+2. Mengkoordinasikan seluruh tim pelaksana.
+3. Menyusun rencana kerja dan memastikan pelaksanaan sesuai
+jadwal.
+4. Melakukan supervisi dan pengendalian kualitas kegiatan.
+5. Memastikan pencapaian output kegiatan.
+6. Mengkoordinasikan penyusunan dan penyampaian laporan akhir.
+12
+5.2 Pembagian Tugas Tim Pelaksana
+5.2 .2. Administrasi
+1. Menyiapkan administrasi kegiatan.
+2. Mengelola dokumen kegiatan.
+3. Menyiapkan daftar hadir, notulensi, dan dokumentasi.
+4. Melakukan pengarsipan dokumen pelaksanaan.
+5. Mendukung penyusunan laporan administrasi kegiatan. 
+5.2 .3. Data Analis
+1. Menyiapkan format database dan instrumen pengolahan data.
+2. Melakukan pemeriksaan dan pembersihan data.
+3. Melakukan validasi dan analisis data hasil pemetaan.
+4. Mengolah data spasial menggunakan GIS.
+5. Menyusun database dan visualisasi hasil pemetaan.
+6. Mendukung penyusunan laporan teknis.
+5.2 .4. Enumerator
+1. Melakukan pemetaan hotspot sesuai wilayah tugas.
+2. Mengumpulkan data menggunakan instrumen pemetaan.
+3. Melakukan verifikasi informasi hotspot.
+4. Mendokumentasikan hasil pemetaan sesuai ketentuan.
+5. Melaporkan hasil kegiatan lapangan kepada Koordinator
+Kegiatan dan Data Analis.
+5.3 Mekanisme Koordinasi
+Mekanisme koordinasi dilaksanakan secara berkala untuk
+memastikan kegiatan berjalan efektif dan terkontrol. Koordinasi
+dilakukan melalui:
+1. Koordinasi awal antara Dinas Kesehatan Kota Malang dan
+Yayasan Lingkar Gagasan Indonesia.
+2. Koordinasi internal tim pelaksana sebelum dan selama kegiatan
+berlangsung.
+3. Supervisi berkala selama proses pemetaan lapangan.
+4. Review hasil pengolahan data sebelum penyusunan laporan
+akhir.
+5. Penyampaian hasil kegiatan melalui forum diseminasi.
+No Istilah Definisi Operasional
+1 Hotspot
+Lokasi atau tempat yang menjadi titik berkumpul,
+beraktivitas, atau berinteraksi populasi kunci sehingga
+memiliki potensi menjadi lokasi pelaksanaan intervensi
+program HIV
+2 Hotspot aktif
+Hotspot yang berdasarkan hasil verifikasi masih digunakan
+atau masih terdapat aktivitas populasi kunci dalam periode
+waktu tertentu.
+3 Hotspot baru Lokasi hotspot yang ditemukan pada saat proses pemetaan
+dan belum tercatat dalam data sebelumnya.
+4 Hotspot tidak
+aktif
+Lokasi yang sebelumnya tercatat sebagai hotspot namun
+berdasarkan hasil verifikasi sudah tidak terdapat aktivitas
+populasi kunci.
+5 Verifikasi
+hotspot
+Proses pengecekan dan konfirmasi keberadaan serta
+informasi hotspot berdasarkan kondisi lapangan.
+6 Populasi kunci
+Kelompok masyarakat yang memiliki risiko lebih tinggi
+terhadap penularan HIV dan menjadi sasaran pemetaan
+sesuai ruang lingkup kegiatan.
+7 Titik koordinat
+Data lokasi geografis hotspot yang diperoleh melalui
+perangkat GPS atau aplikasi pengumpulan data berbasis
+lokasi.
+8 Database
+hotspot
+Kumpulan data hasil pemetaan yang berisi informasi
+hotspot, karakteristik lokasi, koordinat, dan informasi
+pendukung lainnya.
+BAB VI
+DEFINISI OPERASIONAL dan
+INSTRUMEN PEMETAAN
+13
+Definisi operasional digunakan sebagai acuan bersama bagi seluruh tim
+pelaksana dalam memahami, mengidentifikasi, dan mencatat informasi
+selama proses pemetaan hotspot agar menghasilkan data yang seragam
+dan dapat dipertanggungjawabkan.
+6.1 Definisi Operasional
+14
+Instrumen pemetaan digunakan sebagai alat pengumpulan data
+lapangan oleh enumerator untuk memastikan informasi yang diperoleh
+sesuai dengan kebutuhan analisis. Alat yang digunakan dalam
+pengumpulan data menggunakan KoboToolBox. Instrumen pemetaan
+sekurang-kurangnya memuat:
+1.Identitas Hotspot
+Kode hotspot.
+Nama/kode lokasi.
+Wilayah administrasi (kelurahan/kecamatan).
+2.Informasi Lokasi
+Alamat atau deskripsi lokasi.
+Titik koordinat lokasi.
+Karakteristik lokasi.
+3.Informasi Populasi Kunci
+Kategori populasi kunci.
+Perkiraan aktivitas populasi kunci.
+Informasi pendukung terkait hotspot.
+4.Status Hotspot
+Hotspot aktif.
+Hotspot baru.
+Hotspot tidak aktif.
+Hotspot perlu verifikasi lanjutan.
+5.Dokumentasi Lapangan
+Catatan hasil observasi.
+Informasi hasil konfirmasi.
+Dokumentasi pendukung sesuai ketentuan etika dan perlindungan
+data.
+6.2 Instrumen Pemetaan
+6.3 Mekanisme Penggunaan Instrumen
+Penggunaan instrumen pemetaan dilakukan melalui tahapan:
+1.Enumerator mendapatkan penjelasan penggunaan instrumen pada saat
+Kick Off Meeting dan pelatihan.
+2.Enumerator melakukan pengumpulan data lapangan sesuai pembagian
+wilayah dan target pemetaan.
+3.Data yang telah dikumpulkan diperiksa oleh Koordinator Kegiatan.
+4.Data selanjutnya diserahkan kepada Data Analis untuk proses validasi,
+pengolahan, dan analisis.
+5.Hasil akhir instrumen menjadi bagian dari database dan laporan kegiatan.
+No Hasil Kegiatan Bentuk Dokumen
+1 Database hotspot populasi kunci Microsoft Excel/Spreadsheet
+2 Peta persebaran hotspot PDF dan format digital
+3 Laporan hasil pemetaan Dokumen (PDF, cetak, dan flipbook )
+4 Dokumentasi kegiatan Foto dan dokumentasi pendukung
+5 Bahan paparan hasil kegiatan Presentasi (PowerPoint/PDF)
+BAB VII
+KELUARAN DAN HASIL KEGIATAN PEMETAAN
+15
+Pelaksanaan Pemetaan Hotspot Populasi Kunci Kota Malang Tahun 2026
+diharapkan menghasilkan keluaran sebagai berikut:
+1.Terselenggaranya Kick off meeting dan Pelatihan Tim Pelaksana.
+2.Terlaksananya pemetaan hotspot populasi kunci di wilayah Kota
+Malang.
+3.Tersusunnya database hasil pemetaan hotspot yang telah diverifikasi
+dan divalidasi.
+4.Tersusunnya peta persebaran hotspot berbasis Sistem Informasi
+Geografis (GIS).
+5.Tersusunnya laporan hasil pelaksanaan kegiatan serta dokumentasi
+pendukung.
+6.Terlaksananya diseminasi hasil pemetaan kepada Dinas Kesehatan
+Kota Malang.
+7.1 Keluaran Pemetaan
+7.2 Hasil Pemetaan
+Hasil yang akan diserahkan kepada Dinas Kesehatan Kota Malang
+meliputi:
+No Indikator Target
+1 Kick off meeting dan pelatihan
+terlaksana
+1 kegiatan
+2 Tim pelaksana mendapatkan
+pembekalan 100% peserta
+3 Hotspot berhasil dipetakan Sesuai hasil identifikasi lapangan
+4 Supervisi kegiatan 1 kegiatan
+4 Database hotspot tersusun 1 database final
+5 Peta persebaran hotspot tersusun 1 dokumen peta
+6 Laporan akhir kegiatan tersusun 1 laporan akhir
+7 Diseminasi hasil terlaksana 1 kegiatan
+16
+Keberhasilan pelaksanaan kegiatan diukur berdasarkan indikator
+sebagai berikut:
+7.3 Indikator keberhasilan kegiatan
+No Tahapan Kegiatan Waktu Pelaksanaan
+1 Penyusunan proposal teknis Juli
+2 Presentasi/ Review proposal teknis Juli
+3 Kick off meeting dan briefing teknis tim
+pelaksana
+September
+4 Pemetaan hotspot lapangan September - Oktober
+5 Supervisi lapangan September - Oktober
+6 Pengolahan dan analisis data Oktober
+7 Penyusunan laporan November
+8 Finalisasi laporan November
+9 Diseminasi hasil November
+10 Penyerahan laporan akhir Desember
+BAB VIII
+JADWAL PELAKSANAAN
+17
+Pelaksanaan pemetaan hotspot populasi kunci Kota Malang tahun 2026
+direncanakan berlangsung selama bulan Agustus sampai Desember
+2026. Jadwal pelaksanaan disusun untuk memastikan setiap tahapan
+kegiatan dapat dilaksanakan secara sistematis, terukur, dan sesuai
+dengan target waktu yang telah ditetapkan.
+8.1 Jadwal pelaksanaan kegiatan
+8.2 Mekanisme Pemantauan Jadwal
+Selama pelaksanaan kegiatan, setiap tahapan akan dipantau oleh
+Koordinator Kegiatan untuk memastikan kesesuaian antara rencana kerja
+dan realisasi di lapangan. Apabila terdapat kendala yang berpotensi
+mempengaruhi jadwal pelaksanaan, akan dilakukan koordinasi dengan
+Dinas Kesehatan Kota Malang melalui PPTK untuk menentukan langkah
+tindak lanjut yang diperlukan tanpa mengurangi kualitas luaran kegiatan.
+Tahapan Penanggung
+Jawab Pengendalian Mutu
+Persiapan Koordinator
+Kegiatan
+Review rencana kerja, instrumen
+pemetaan, pembagian tugas, dan kesiapan
+tim pelaksana.
+Kick Off
+Meeting dan
+Pelatihan
+Koordinator
+Kegiatan
+Penyamaan persepsi mengenai
+metodologi, definisi operasional,
+instrumen, etika pelaksanaan, dan
+mekanisme pelaporan
+Pemetaan
+lapangan Enumerator Pengumpulan data sesuai instrumen dan
+prosedur yang telah ditetapkan.
+Supervisi
+lapangan
+Koordinator
+Kegiatan
+Melakukan supervisi terhadap
+pelaksanaan pemetaan, pemeriksaan
+kelengkapan instrumen, validasi lokasi,
+verifikasi data, serta memberikan umpan
+balik kepada enumerator apabila
+dit k k tid k i
+Pemeriksaan
+data Data Analis
+Melakukan pengecekan kelengkapan data,
+konsistensi pengisian, identifikasi
+duplikasi, dan data cleaning.
+Analisis Data Data Analis
+Melakukan analisis data, pengolahan data
+spasial (GIS), serta review hasil analisis
+sebelum penyusunan laporan.
+Review laporan Koordinator
+Kegiatan
+Melakukan pemeriksaan kesesuaian hasil,
+kelengkapan dokumen, dan kualitas
+laporan sebelum disampaikan kepada
+Dinas Kesehatan Kota Malang.
+Diseminasi dan
+laporan akhir
+Yayasan Lingkar
+Gagasan Indonesia
+Melakukan penyampaian hasil kegiatan,
+dokumentasi, serta penyerahan laporan
+akhir sesuai ketentuan.
+BAB  IX
+MANAJEMEN MUTU DAN MANAJEMEN RISIKO
+19
+Manajemen mutu diterapkan untuk memastikan seluruh tahapan
+pelaksanaan kegiatan menghasilkan data yang akurat, konsisten, dan
+dapat dipertanggungjawabkan. Pengendalian mutu dilakukan sejak
+tahap persiapan hingga penyampaian laporan akhir.
+9.1 Manajemen Mutu
+Risiko Dampak Mitigasi
+Hotspot tidak
+ditemukan atau sudah
+tidak aktif
+Target pemetaan
+tidak tercapai
+Melakukan konfirmasi kepada
+komunitas dan identifikasi lokasi
+alternatif.
+Ditemukan hotspot
+baru di luar daftar awal
+Bertambahnya
+cakupan
+pemetaan
+Melakukan pencatatan dan verifikasi
+sebagai hotspot baru.
+Duplikasi data hotspot Menurunkan
+kualitas database
+Melakukan validasi dan pencocokan
+data sebelum finalisasi.
+Kendala akses ke lokasi
+hotspot
+Keterlambatan
+pelaksanaan
+Menyesuaikan jadwal dan
+berkoordinasi dengan tokoh kunci
+setempat
+Ketidaksesuaian
+pengisian instrumen Data tidak valid Melaksanakan supervisi lapangan
+dan pemeriksaan instrumen secara
+berkala
+Keterlambatan
+penyampaian data oleh
+enumerator
+Menghambat
+proses analisis
+Menetapkan batas waktu pelaporan
+harian dan monitoring oleh
+Koordinator Kegiatan.
+Perubahan jadwal
+pelaksanaan
+Pergeseran
+timeline kegiatan
+Melakukan koordinasi dengan PPTK
+dan Dinas Kesehatan Kota Malang
+untuk penyesuaian jadwal
+20
+Dalam pelaksanaan kegiatan terdapat beberapa potensi risiko yang
+dapat mempengaruhi pencapaian target. Oleh karena itu, dilakukan
+identifikasi risiko beserta langkah mitigasinya sebagai berikut:
+9.2 Manajemen Risiko
+9.3 Monitoring dan Evaluasi
+Monitoring dan evaluasi dilaksanakan secara berkala untuk memastikan
+setiap tahapan kegiatan berjalan sesuai rencana. Monitoring dilakukan
+oleh Koordinator Kegiatan melalui pemantauan pelaksanaan lapangan,
+capaian target, kualitas data, serta kemajuan pekerjaan. Evaluasi
+dilakukan pada setiap akhir tahapan kegiatan sebagai dasar perbaikan
+pelaksanaan dan penyusunan laporan akhir.
+21
+Seluruh proses pelaksanaan kegiatan didokumentasikan secara
+sistematis sebagai bagian dari akuntabilitas pelaksanaan kegiatan.
+Dokumentasi meliputi dokumen administrasi, daftar hadir, notulen, foto
+kegiatan, dokumentasi lapangan, hasil supervisi, proses pengolahan data,
+kegiatan diseminasi, serta dokumen pendukung lainnya. Seluruh
+dokumentasi akan menjadi bagian yang tidak terpisahkan dari laporan
+akhir kegiatan.
+9.4 Dokumentasi Kegiatan
+Proposal Teknis pemetaan hotspot populasi kunci Kota Malang Tahun
+2026 ini disusun sebagai pedoman pelaksanaan kegiatan dalam rangka
+menghasilkan data hotspot yang akurat, mutakhir, dan dapat
+dipertanggungjawabkan sebagai dasar perencanaan serta penguatan
+program pencegahan dan pengendalian HIV di Kota Malang. Melalui
+pendekatan berbasis komunitas, kolaborasi antar Organisasi Masyarakat
+Sipil, serta dukungan Dinas Kesehatan Kota Malang, pelaksanaan
+kegiatan diharapkan dapat berjalan secara efektif, terukur, dan
+menghasilkan luaran yang sesuai dengan tujuan kegiatan.
+Yayasan Lingkar Gagasan Indonesia berkomitmen melaksanakan seluruh
+tahapan kegiatan secara profesional, transparan, akuntabel, serta sesuai
+dengan ketentuan yang telah ditetapkan. Besar harapan kami agar
+proposal teknis ini dapat menjadi acuan bersama dalam pelaksanaan
+kegiatan pemetaan hotspot populasi kunci Kota Malang Tahun 2026.
+Atas perhatian, kepercayaan, dan kerja sama yang diberikan, kami
+mengucapkan terima kasih.
+BAB X
+PENUTUP
+
+
+
+
+
+Terima
+kasih
