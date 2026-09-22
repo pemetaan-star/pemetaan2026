@@ -182,6 +182,35 @@
       from { opacity: 0; transform: translateY(12px) scale(.96); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    .dashboard-loading {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      background: rgba(15, 27, 46, .38);
+      backdrop-filter: blur(12px) saturate(115%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .18s ease, visibility .18s ease;
+      z-index: 1900;
+    }
+    .dashboard-loading.show { opacity: 1; visibility: visible; pointer-events: auto; }
+    .dashboard-loading-card { width: min(390px, 100%); padding: 2.1rem 2rem 1.7rem; border: 1px solid rgba(255,255,255,.18); border-radius: 24px; background: linear-gradient(145deg, #14253d 0%, #203854 100%); box-shadow: 0 30px 90px rgba(8,18,34,.34), inset 0 1px 0 rgba(255,255,255,.14); text-align: center; color: white; }
+    .dashboard-loading-brand { position: relative; display: grid; width: 128px; height: 128px; margin: 0 auto 1.15rem; place-items: center; }
+    .dashboard-loading-brand::before, .dashboard-loading-brand::after { content: ''; position: absolute; border: 1px solid rgba(113,221,211,.34); border-radius: 50%; }
+    .dashboard-loading-brand::before { inset: 7px; animation: loadingHalo 2.2s ease-in-out infinite; }
+    .dashboard-loading-brand::after { inset: -2px; border-color: rgba(236,118,93,.22); animation: loadingHalo 2.2s ease-in-out .7s infinite reverse; }
+    .dashboard-loading-icon { position: relative; z-index: 1; width: 112px; height: 112px; animation: dashboardIconSpin 1.4s linear infinite; filter: drop-shadow(0 8px 14px rgba(0,0,0,.2)); }
+    .dashboard-loading-kicker { margin-bottom: .55rem; color: #71ddd3; font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .dashboard-loading-title { color: white; font-family: 'Space Grotesk', sans-serif; font-size: 1.22rem; font-weight: 700; letter-spacing: -.02em; }
+    .dashboard-loading-message { margin-top: .45rem; color: rgba(255,255,255,.68); font-size: .83rem; }
+    .dashboard-loading-track { height: 4px; margin-top: 1.35rem; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.14); }
+    .dashboard-loading-track::after { content: ''; display: block; width: 42%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #71ddd3, #ec765d); animation: loadingProgress 1.35s ease-in-out infinite; }
+    @keyframes dashboardIconSpin { to { transform: rotate(360deg); } }
+    @keyframes loadingHalo { 0%, 100% { transform: scale(.92); opacity: .42; } 50% { transform: scale(1.06); opacity: 1; } }
+    @keyframes loadingProgress { 0% { transform: translateX(-110%); } 100% { transform: translateX(260%); } }
     #modalEnumerator .modal-content { max-height: calc(100vh - 2rem); }
     #modalEnumerator .modal-body { max-height: calc(100vh - 10rem); overflow-y: auto; overscroll-behavior: contain; }
     #modalEnumerator .modal-dialog { margin: 1rem auto; }
@@ -210,6 +239,9 @@
     .login-form .form-label { color: var(--ink); font-size: .8rem; font-weight: 700; }
     .login-form .input-group-text { background: #f7fafc; border-color: var(--line); color: var(--muted); }
     .login-form .form-control { min-height: 46px; }
+    .login-loading-icon { width: 22px; height: 22px; margin-right: 8px; vertical-align: -6px; animation: loginIconSpin 1.2s linear infinite; }
+    .login-loading-icon path, .login-loading-icon circle { vector-effect: non-scaling-stroke; }
+    @keyframes loginIconSpin { to { transform: rotate(360deg); } }
     .login-error { color: #bd4b3c; background: #fff0ed; border: 1px solid #ffd9d2; border-radius: 9px; font-size: .82rem; padding: 10px 12px; }
     .user-chip { color: rgba(255,255,255,.82); font-size: .78rem; margin-right: 14px; }
     .user-chip strong { color: white; }
@@ -603,6 +635,18 @@
   </div>
 </div>
 
+<div id="dashboardLoading" class="dashboard-loading" role="status" aria-live="polite" aria-busy="true" hidden>
+  <div class="dashboard-loading-card">
+    <div class="dashboard-loading-brand">
+      <svg class="dashboard-loading-icon" viewBox="0 0 512 512" aria-hidden="true"><path d="M205 28A220 220 0 0 0 31 220M307 27A220 220 0 0 1 481 220M481 292A220 220 0 0 1 307 485M205 485A220 220 0 0 1 31 292" fill="none" stroke="#71ddd3" stroke-width="25"></path><path d="M205 0l98 6-43 67zM512 205l-6 98-67-43zM307 512l-98-6 43-67zM0 307l6-98 67 43z" fill="#71ddd3"></path><text x="116" y="245" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="58" font-style="italic" font-weight="700">Lingga</text><text x="150" y="310" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="48" font-style="italic" font-weight="700">Indonesia</text></svg>
+    </div>
+    <div class="dashboard-loading-kicker">Data intelligence platform</div>
+    <div class="dashboard-loading-title">Menyiapkan dashboard</div>
+    <div class="dashboard-loading-message">Mengambil data terbaru dari Spreadsheet...</div>
+    <div class="dashboard-loading-track" aria-hidden="true"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   let map, markersGroup, chartKec, qcModalObj, enumeratorModalObj, supervisionModalObj, supervisionListModalObj, supervisionDetailModalObj, dataDetailModalObj;
@@ -687,14 +731,14 @@
     }
 
     button.disabled = true;
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memeriksa...';
+    button.innerHTML = getLoginLoadingMarkup();
     errorBox.hidden = true;
 
     if (!window.google || !google.script || !google.script.run) {
       errorBox.textContent = 'Login hanya dapat digunakan dari Web App Google Apps Script yang sudah dideploy.';
       errorBox.hidden = false;
       button.disabled = false;
-      button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+      resetLoginButton(button);
       return false;
     }
 
@@ -704,7 +748,7 @@
           errorBox.textContent = result ? result.message : 'Login gagal.';
           errorBox.hidden = false;
           button.disabled = false;
-          button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+          resetLoginButton(button);
           return;
         }
         sessionToken = result.token;
@@ -716,7 +760,7 @@
         } catch (error) {
           reportRuntimeError(error);
           button.disabled = false;
-          button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+          resetLoginButton(button);
         }
       })
       .withFailureHandler(error => {
@@ -724,15 +768,26 @@
         errorBox.textContent = 'Tidak dapat menghubungi server: ' + message;
         errorBox.hidden = false;
         button.disabled = false;
-        button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+        resetLoginButton(button);
       })
       .authenticateUser(username, password);
     return false;
   }
 
+  function getLoginLoadingMarkup() {
+    return '<svg class="login-loading-icon" viewBox="0 0 512 512" aria-hidden="true"><path d="M205 28A220 220 0 0 0 31 220M307 27A220 220 0 0 1 481 220M481 292A220 220 0 0 1 307 485M205 485A220 220 0 0 1 31 292" fill="none" stroke="currentColor" stroke-width="25"></path><path d="M205 0l98 6-43 67zM512 205l-6 98-67-43zM307 512l-98-6 43-67zM0 307l6-98 67 43z" fill="currentColor"></path><text x="116" y="245" fill="currentColor" font-family="Arial, Helvetica, sans-serif" font-size="58" font-style="italic" font-weight="700">Lingga</text><text x="150" y="310" fill="currentColor" font-family="Arial, Helvetica, sans-serif" font-size="48" font-style="italic" font-weight="700">Indonesia</text></svg>Memeriksa...';
+  }
+
+  function resetLoginButton(button) {
+    button.disabled = false;
+    button.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Masuk';
+  }
+
   function showLogin() {
     document.getElementById('loginView').hidden = false;
     document.getElementById('appView').hidden = true;
+    resetLoginButton(document.getElementById('loginButton'));
+    setDashboardLoading(false);
     document.getElementById('loginUsername').focus();
   }
 
@@ -1532,24 +1587,36 @@
 
   function loadData() {
     const requestId = ++dataLoadRequestId;
+    setDashboardLoading(true);
     document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm me-2"></div>Memuat data...</td></tr>';
     if (!window.google || !google.script || !google.script.run) {
+      setDashboardLoading(false);
       reportRuntimeError(new Error('Google Apps Script bridge tidak tersedia. Buka URL Web App Apps Script, bukan file HTML lokal.'));
       return;
     }
     const loadTimeout = setTimeout(() => {
       if (requestId !== dataLoadRequestId) return;
+      setDashboardLoading(false);
       document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-4"><div class="alert alert-warning mb-0">Data belum merespons dari server. <button type="button" class="btn btn-sm btn-warning ms-2" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi</button></div></td></tr>';
     }, 15000);
     google.script.run.withSuccessHandler(data => {
       clearTimeout(loadTimeout);
+      setDashboardLoading(false);
       renderDashboard(data);
       if (!currentUser || String(currentUser.role || '').trim().toLowerCase() !== 'enumerator') loadRiskSummary();
     }).withFailureHandler(error => {
       clearTimeout(loadTimeout);
+      setDashboardLoading(false);
       document.querySelector('#dataTable tbody').innerHTML = '<tr><td colspan="10" class="text-center py-4"><div class="alert alert-danger mb-0">Gagal memuat data. <button type="button" class="btn btn-sm btn-danger ms-2" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi</button></div></td></tr>';
       handleSessionError(error);
     }).getSheetData(sessionToken);
+  }
+
+  function setDashboardLoading(isLoading) {
+    const loading = document.getElementById('dashboardLoading');
+    if (!loading) return;
+    loading.hidden = !isLoading;
+    loading.classList.toggle('show', isLoading);
   }
 
   function loadRiskSummary() {
